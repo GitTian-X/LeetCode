@@ -1686,5 +1686,52 @@ namespace LeetCode
                 return count;
             }
         }
+        public int MaxSubArray(int[] nums)
+        {
+            int pre = 0, maxAns = nums[0];
+            foreach (var num in nums)
+            {
+                pre = Math.Max(pre + num, num);
+                maxAns = Math.Max(maxAns, pre);
+            }
+            return maxAns;
+        }
+        public IList<int> SpiralOrder(int[][] matrix)
+        {
+            IList<int> ans = new List<int>();
+            if (matrix == null || matrix.Length == 0 || matrix[0].Length == 0)
+            {
+                return ans;
+            }
+            int rows = matrix.Length, column = matrix[0].Length;
+            int left = 0, right = column - 1, top = 0, bottom = rows - 1;
+            while (left <= right && top <= bottom)
+            {
+                for (int i = left; i <= right; i++)
+                {
+                    ans.Add(matrix[top][i]);
+                }
+                for (int j = top + 1; j <= bottom; j++)
+                {
+                    ans.Add(matrix[j][right]);
+                }
+                if (left < right && top < bottom)
+                {
+                    for (int i = right - 1; i > left; i--)
+                    {
+                        ans.Add(matrix[bottom][i]);
+                    }
+                    for (int row = bottom; row > top; row--)
+                    {
+                        ans.Add(matrix[row][left]);
+                    }
+                }
+                left++;
+                right--;
+                top++;
+                bottom--;
+            }
+            return ans;
+        }
     }
 }
