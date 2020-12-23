@@ -1686,9 +1686,5 @@ namespace LeetCode
                 return count;
             }
         }
-        public int MaxSubArray(int[] nums)
-        {
-
-        }
     }
 }
