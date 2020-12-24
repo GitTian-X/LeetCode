@@ -1733,5 +1733,46 @@ namespace LeetCode
             }
             return ans;
         }
+        public bool CanJump(int[] nums)
+        {
+            int maxLength = 0;
+            int n = nums.Length;
+            for (int i = 0; i < n; i++)
+            {
+                if (i <= maxLength)
+                {
+                    maxLength = Math.Max(maxLength, nums[i] + i);
+                    if (maxLength >= n - 1)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public int[][] Merge(int[][] intervals)
+        {
+            if (intervals.Length == 0)
+            {
+                return new int[0][];
+            }
+            Array.Sort(intervals, (int[] num1, int[] num2) => {
+                return num1[0] - num2[0];
+            });
+            List<int[]> merged = new List<int[]>();
+            for (int i = 0; i < intervals.Length; i++)
+            {
+                int L = intervals[i][0], R = intervals[i][1];
+                if (merged.Count == 0 || merged[merged.Count - 1][1] < L)
+                {
+                    merged.Add(new int[] { L, R });
+                }
+                else
+                {
+                    merged[merged.Count - 1][1] = Math.Max(R, merged[merged.Count - 1][1]);
+                }
+            }
+            return merged.ToArray();
+        }
     }
 }
