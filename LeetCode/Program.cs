@@ -13,7 +13,7 @@ namespace LeetCode
             ListNode l2 = new ListNode(1);
             l2.next = new ListNode(3);
             l2.next.next = new ListNode(4);
-            Console.WriteLine(solution.GroupAnagrams(new string[] { "abc", "bac","de","ed"}));
+            Console.WriteLine(solution.CanJump(new int[] { 5, 9, 3, 2, 1, 0, 2, 3, 3, 1, 0, 0}));
         }
     }
 }
