@@ -1774,5 +1774,88 @@ namespace LeetCode
             }
             return merged.ToArray();
         }
+        public int[][] Insert(int[][] intervals, int[] newInterval)
+        {
+            int left = newInterval[0];
+            int right = newInterval[1];
+            bool placed = false;
+            List<int[]> ans = new List<int[]>();
+            foreach (var interval in intervals)
+            {
+                if (interval[0] > right)
+                {
+                    if (!placed)
+                    {
+                        ans.Add(new int[] { left, right});
+                        placed = true;
+                    }
+                    ans.Add(interval);
+                }
+                else if (interval[1] < left)
+                {
+                    ans.Add(interval);
+                }
+                else
+                {
+                    left = Math.Min(left, interval[0]);
+                    right = Math.Max(right, interval[1]);
+                }
+            }
+            if (!placed)
+            {
+                ans.Add(new int[] { left, right });
+            }
+            return ans.ToArray();
+        }
+        public int LengthOfLastWord(string s)
+        {
+            int ans = 0;
+            for (int i = s.Length - 1; i >= 0; i--)
+            {
+                if (s[i] != ' ')
+                {
+                    ans++;
+                }
+                else if (ans != 0)
+                {
+                    return ans;
+                }
+            }
+            return ans;
+        }
+        public int[][] GenerateMatrix(int n)
+        {
+            int[][] ans = new int[n][];
+            int left = 0, right = n - 1, top = 0, bottom = n - 1;
+            int start = 1, target = n * n;
+            for (int i = 0; i < n; i++)
+            {
+                ans[i] = new int[n];
+            }
+            while (start <= target)
+            {
+                for (int i = left; i <= right; i++)
+                {
+                    ans[top][i] = start++;
+                }
+                top++;
+                for (int i = top; i <= bottom; i++)
+                {
+                    ans[i][right] = start++;
+                }
+                right--;
+                for (int i = right; i >= left; i--)
+                {
+                    ans[bottom][i] = start++;
+                }
+                bottom--;
+                for (int i = bottom; i >= top; i--)
+                {
+                    ans[i][left] = start++;
+                }
+                left++;
+            }
+            return ans;
+        }
     }
 }
