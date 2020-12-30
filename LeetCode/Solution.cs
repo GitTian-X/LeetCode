@@ -1857,5 +1857,64 @@ namespace LeetCode
             }
             return ans;
         }
+        public string GetPermutation(int n, int k)
+        {
+            k--;
+            int[] factorial = new int[n];
+            factorial[0] = 1;
+            for (int i = 1; i < n; i++)
+            {
+                factorial[i] = factorial[i - 1] * i;
+            }
+            List<int> nums = new List<int>();
+            for (int i = 1; i <= n; i++)
+            {
+                nums.Add(i);
+            }
+            StringBuilder ans = new StringBuilder();
+            for (int i = n - 1; i >= 0; i--)
+            {
+                int index = k / factorial[i];
+                ans.Append(nums[index]);
+                nums.RemoveAt(index);
+                k -= index * factorial[i];
+            }
+            return ans.ToString();
+        }
+        public ListNode RotateRight(ListNode head, int k)
+        {
+            if (head == null)
+            {
+                return null;
+            }
+            if (head.next == null)
+            {
+                return head;
+            }
+            ListNode oldTail = head;
+            int n;
+            for (n = 1; oldTail.next != null; n++)
+            {
+                oldTail = oldTail.next;
+            }
+            oldTail.next = head;
+            ListNode newTail = head;
+            for (int i = 0; i < n - k % n - 1; i++)
+            {
+                newTail = newTail.next;
+            }
+            ListNode ans = newTail.next;
+            newTail.next = null;
+            return ans;
+        }
+        public int UniquePaths(int m, int n)
+        {
+            long ans = 1;
+            for (int i = n, y = 1; y < m; i++, y++)
+            {
+                ans = ans * i / y;
+            }
+            return (int)ans;
+        }
     }
 }
