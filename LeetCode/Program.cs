@@ -13,7 +13,7 @@ namespace LeetCode
             ListNode l2 = new ListNode(1);
             l2.next = new ListNode(3);
             l2.next.next = new ListNode(4);
-            Console.WriteLine(solution.UniquePaths(3, 7));
+            Console.WriteLine(solution.IsNumber("5 1.8"));
         }
     }
 }

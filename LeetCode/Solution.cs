@@ -1939,5 +1939,91 @@ namespace LeetCode
             }
             return f[m - 1];
         }
+        public int MinPathSum(int[][] grid)
+        {
+            if (grid == null || grid.Length == 0 || grid[0].Length == 0)
+            {
+                return 0;
+            }
+            int rows = grid.Length;
+            int column = grid[0].Length;
+            int[,] dp = new int[rows, column];
+            dp[0, 0] = grid[0][0];
+            for (int i = 1; i < rows; i++)
+            {
+                dp[i, 0] = dp[i - 1, 0] + grid[i][0];
+            }
+            for (int i = 1; i < column; i++)
+            {
+                dp[0, i] = dp[0, i - 1] + grid[0][i];
+            }
+            for (int i = 1; i < rows; i++)
+            {
+                for (int j = 1; j < column; j++)
+                {
+                    dp[i, j] = Math.Min(dp[i, j - 1], dp[i - 1, j]) + grid[i][j];
+                }
+            }
+            return dp[rows - 1, column - 1];
+        }
+        public bool IsNumber(string s)
+        {
+            int state = 0;
+            int finals = 0b101101000;
+            int[][] transfer = new int[][]
+            {
+                new int[]{0, 1, 6, 2, -1 },
+                new int[]{-1, -1, 6, 2, -1 },
+                new int[]{-1, -1, 3, -1, -1 },
+                new int[]{8, -1, 3, -1, 4 },
+                new int[]{-1, 7, 5, -1, -1 },
+                new int[]{8, -1, 5, -1, -1 },
+                new int[]{8, -1, 6, 3, 4 },
+                new int[]{-1, -1, 5, -1, -1 },
+                new int[]{8, -1, -1, -1, -1 },
+            };
+            char[] ss = s.ToCharArray();
+            for (int i = 0; i < ss.Length; i++)
+            {
+                int id = Make(ss[i]);
+                if (id < 0)
+                {
+                    return false;
+                }
+                state = transfer[state][id];
+                if (state < 0)
+                {
+                    return false;
+                }
+            }
+            return (finals & (1 << state)) > 0;
+        }
+        private int Make(char c)
+        {
+            return c switch
+            {
+                ' ' => 0,
+                '+' => 1,
+                '-' => 1,
+                '.' => 3,
+                'e' => 4,
+                _ => (c >= 48 && c <= 57) ? 2 : -1
+            };
+        }
+        public int[] PlusOne(int[] digits)
+        {
+            for (int i = digits.Length - 1; i >= 0; i--)
+            {
+                digits[i]++;
+                digits[i] %= 10;
+                if (digits[i] != 0)
+                {
+                    return digits;
+                }
+            }
+            digits = new int[digits.Length + 1];
+            digits[0] = 1;
+            return digits;
+        }
     }
 }
