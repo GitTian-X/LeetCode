@@ -13,7 +13,7 @@ namespace LeetCode
             ListNode l2 = new ListNode(1);
             l2.next = new ListNode(3);
             l2.next.next = new ListNode(4);
-            Console.WriteLine(solution.IsNumber("5 1.8"));
+            Console.WriteLine(solution.MySqrt(2147395600));
         }
     }
 }

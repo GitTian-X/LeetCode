@@ -2025,5 +2025,93 @@ namespace LeetCode
             digits[0] = 1;
             return digits;
         }
+        public string AddBinary(string a, string b)
+        {
+            StringBuilder ans = new StringBuilder();
+            int length = Math.Max(a.Length, b.Length);
+            int carry = 0;
+            for (int i = 0; i < length; i++)
+            {
+                carry += i < a.Length ? a[a.Length - 1 - i] - '0' : 0; 
+                carry += i < b.Length ? b[b.Length - 1 - i] - '0' : 0;
+                ans.Append((char)(carry % 2 + '0'));
+                carry /= 2;
+            }
+            if (carry > 0)
+            {
+                ans.Append('1');
+            }
+            char[] c = ans.ToString().ToCharArray();
+            Array.Reverse(c);
+            return new string(c);
+        }
+        public IList<string> FullJustify(string[] words, int maxWidth)
+        {
+            IList<string> ans = new List<string>();
+            int cnt = 0, bg = 0;
+            for (int i = 0; i < words.Length; i++)
+            {
+                cnt += words[i].Length + 1;
+                if (i + 1 == words.Length || cnt + words[i + 1].Length > maxWidth)
+                {
+                    ans.Add(FullWords(words, bg, i, maxWidth, i + 1 == words.Length));
+                    bg = i + 1;
+                    cnt = 0;
+                }
+            }
+            return ans;
+        }
+        private string FullWords(string[] words, int bg, int ed, int maxWidth, bool lastLine = false)
+        {
+            int wordCount = ed - bg + 1;
+            //空格数 = 总长减去单词后默认的空格,+1是为了处理本行最后一个单词带的空格
+            int spaceCount = maxWidth + 1 - wordCount;
+            for (int i = bg; i <= ed; i++)
+            {
+                spaceCount -= words[i].Length;
+            }
+            int spaceSuffix = 1;
+            int spaceAvg = (wordCount == 1) ? 1 : spaceCount / (wordCount - 1);
+            int spaceExtra = (wordCount == 1) ? 0 : spaceCount % (wordCount - 1);
+            StringBuilder ans = new StringBuilder();
+            for (int i = bg; i < ed; i++)
+            {
+                ans.Append(words[i]);
+                if (lastLine)
+                {
+                    ans.Append(' ');
+                    continue;
+                }
+                for (int j = 0; j < spaceSuffix + spaceAvg + ((i - bg) < spaceExtra ? 1 : 0); j++)
+                {
+                    ans.Append(' ');
+                }
+            }
+            ans.Append(words[ed]);
+            int len = ans.Length;
+            for (int i = 0; i < maxWidth - len; i++)
+            {
+                ans.Append(' ');
+            }
+            return ans.ToString();
+        }
+        public int MySqrt(int x)
+        {
+            if (x == 0)
+            {
+                return 0;
+            }
+            double C = x, x0 = x;
+            while (true)
+            {
+                double xi = 0.5 * (x0 + C / x0);
+                if (Math.Abs(x0 - xi) < 1e-7)
+                {
+                    break;
+                }
+                x0 = xi;
+            }
+            return (int)x0;
+        }
     }
 }
