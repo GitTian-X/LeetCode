@@ -2113,5 +2113,57 @@ namespace LeetCode
             }
             return (int)x0;
         }
+        public int ClimbStairs(int n)
+        {
+            int p = 0, q = 0, r = 1;
+            for (int i = 1; i <= n; i++)
+            {
+                p = q;
+                q = r;
+                r = q + p;
+            }
+            return r;
+        }
+        public string SimplifyPath(string path)
+        {
+            string[] pathArray = path.Split("/");
+            StringBuilder res = new StringBuilder();
+            Stack<string> stack = new Stack<string>();
+            for (int i = 0; i < pathArray.Length; i++)
+            {
+                if (pathArray[i].Length == 0 || pathArray[i].Equals("."))
+                {
+                    continue;
+                }
+                if (stack != null && stack.Count != 0)
+                {
+                    if (pathArray[i].Equals(".."))
+                    {
+                        stack.Pop();
+                    }
+                    else
+                    {
+                        stack.Push(pathArray[i]);
+                    }
+                }
+                else
+                {
+                    if (!pathArray[i].Equals(".."))
+                    {
+                        stack.Push(pathArray[i]);
+                    }
+                }
+            }
+            if (stack == null || stack.Count == 0)
+            {
+                return "/";
+            }
+            while (stack != null && stack.Count > 0)
+            {
+                res.Insert(0, stack.Pop());
+                res.Insert(0, "/");
+            }
+            return res.ToString();
+        }
     }
 }
