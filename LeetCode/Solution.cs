@@ -2165,5 +2165,76 @@ namespace LeetCode
             }
             return res.ToString();
         }
+        public int MinDistance(string word1, string word2)
+        {
+            int m = word1.Length;
+            int n = word2.Length;
+            if (m * n == 0)
+            {
+                return m + n;
+            }
+            int[, ] dp = new int[m + 1, n + 1];
+            for (int i = 0; i <= m; i++)
+            {
+                dp[i, 0] = i;
+            }
+            for (int j = 1; j <= n; j++)
+            {
+                dp[0, j] = j;
+            }
+            for (int i = 1; i <= m; i++)
+            {
+                for (int j = 1; j <= n; j++)
+                {
+                    dp[i, j] = 1 + Math.Min(Math.Min(dp[i - 1, j], dp[i, j - 1]), dp[i - 1, j - 1] - (word1[i - 1] == word2[j - 1] ? 1 : 0));
+                }
+            }
+            return dp[m, n];
+        }
+        public void SetZeroes(int[][] matrix)
+        {
+            bool isCol = false;
+            int row = matrix.Length;
+            int col = matrix[0].Length;
+            for (int i = 0; i < row; i++)
+            {
+                if (matrix[i][0] == 0)
+                {
+                    isCol = true;
+                }
+                for (int j = 1; j < col; j++)
+                {
+                    if (matrix[i][j] == 0)
+                    {
+                        matrix[i][0] = 0;
+                        matrix[0][j] = 0;
+                    }
+                }
+            }
+            for (int i = 1; i < row; i++)
+            {
+                for (int j = 1; j < col; j++)
+                {
+                    if (matrix[i][0] == 0 || matrix[0][j] == 0)
+                    {
+                        matrix[i][j] = 0;
+                    }
+                }
+            }
+            if (matrix[0][0] == 0)
+            {
+                for (int i = 0; i < col; i++)
+                {
+                    matrix[0][i] = 0;
+                }
+            }
+            if (isCol)
+            {
+                for (int i = 0; i < row; i++)
+                {
+                    matrix[i][0] = 0;
+                }
+            }
+        }
     }
 }
