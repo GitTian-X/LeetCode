@@ -2236,5 +2236,103 @@ namespace LeetCode
                 }
             }
         }
+        public bool SearchMatrix(int[][] matrix, int target)
+        {
+            int m = matrix.Length;
+            if (m == 0)
+            {
+                return false;
+            }
+            int n = matrix[0].Length;
+            int left = 0, right = m * n - 1;
+            while (left <= right)
+            {
+                int mid = (left + right) / 2;
+                if (target == matrix[mid / n][mid % n])
+                {
+                    return true;
+                }
+                else if (target < matrix[mid / n][mid % n])
+                {
+                    right = mid - 1;
+                }
+                else
+                {
+                    left = mid + 1;
+                }
+            }
+            return false;
+        }
+        public void SortColors(int[] nums)
+        {
+            int n = nums.Length;
+            int p0 = 0, p2 = n - 1;
+            for (int i = 0; i <= p2; i++)
+            {
+                while (i <= p2 && nums[i] == 2)
+                {
+                    int tmp = nums[i];
+                    nums[i] = nums[p2];
+                    nums[p2] = tmp;
+                    p2--;
+                }
+                if (nums[i] == 0)
+                {
+                    int tmp = nums[i];
+                    nums[i] = nums[p0];
+                    nums[p0] = tmp;
+                    p0++;
+                }
+            }
+        }
+        public string MinWindow(string s, string t)
+        {
+            int sLen = s.Length;
+            int tLen = t.Length;
+            if (sLen == 0 || tLen == 0 || sLen < tLen)
+            {
+                return "";
+            }
+            int[] tFreq = new int[128];
+            foreach (var c in t)
+            {
+                tFreq[c]++;
+            }
+            int distance = tLen;
+            int minLen = sLen + 1;
+            int begin = 0;
+            int left = 0;
+            int right = 0;
+            while (right < sLen)
+            {
+                char charRight = s[right];
+                if (tFreq[charRight] > 0)
+                {
+                    distance--;
+                }
+                tFreq[charRight]--;
+                right++;
+                while (distance == 0)
+                {
+                    if (right - left < minLen)
+                    {
+                        minLen = right - left;
+                        begin = left;
+                    }
+                    char charLeft = s[left];
+                    if (tFreq[charLeft] == 0)
+                    {
+                        distance++;
+                    }
+                    tFreq[charLeft]++;
+                    left++;
+                }
+            }
+            if (minLen == sLen + 1)
+            {
+                return "";
+            }
+            return s.Substring(begin, minLen);
+        }
     }
 }
