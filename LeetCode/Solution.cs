@@ -2334,5 +2334,97 @@ namespace LeetCode
             }
             return s.Substring(begin, minLen);
         }
+        List<int> tmp77 = new List<int>();
+        IList<IList<int>> ans77 = new List<IList<int>>();
+        public IList<IList<int>> Combine(int n, int k)
+        {
+            DFS3(1, n, k);
+            return ans77;
+        }
+        private void DFS3(int cur, int n, int k)
+        {
+            if (tmp77.Count + (n - cur + 1) < k)
+            {
+                return;
+            }
+            if (tmp77.Count == k)
+            {
+                ans77.Add(new List<int>(tmp77));
+                return;
+            }
+            tmp77.Add(cur);
+            DFS3(cur + 1, n, k);
+            tmp77.RemoveAt(tmp77.Count - 1);
+            DFS3(cur + 1, n, k);
+        }
+        public IList<IList<int>> Subsets(int[] nums)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            IList<int> tmp = new List<int>();
+            DFS4(res, tmp, 0, nums);
+            return res;
+        }
+        private void DFS4(IList<IList<int>> res, IList<int> tmp, int cur, int[] nums)
+        {
+            if (cur == nums.Length)
+            {
+                res.Add(new List<int>(tmp));
+                return;
+            }
+            tmp.Add(nums[cur]);
+            DFS4(res, tmp, cur + 1, nums);
+            tmp.RemoveAt(tmp.Count - 1);
+            DFS4(res, tmp, cur + 1, nums);
+        }
+        public bool Exist(char[][] board, string word)
+        {
+            int h = board.Length, w = board[0].Length;
+            bool[,] visited = new bool[h, w];
+            for (int i = 0; i < h; i++)
+            {
+                for (int j = 0; j < w; j++)
+                {
+                    bool flag = Check(board, visited, i, j, word, 0);
+                    if (flag)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private bool Check(char[][] board, bool[,] visited, int i, int j, string word, int v)
+        {
+            if (board[i][j] != word[v])
+            {
+                return false;
+            }
+            else if (v == word.Length - 1)
+            {
+                return true;
+            }
+            visited[i, j] = true;
+            int[, ] directions = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
+            bool result = false;
+            for (int k = 0; k < directions.Length / 2; k++)
+            {
+                int newi = i + directions[k, 0], newj = j + directions[k, 1];
+                if (newi >= 0 && newi < board.Length && newj >= 0 && newj < board[0].Length)
+                {
+                    if (!visited[newi, newj])
+                    {
+                        bool flag = Check(board, visited, newi, newj, word, v + 1);
+                        if (flag)
+                        {
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            visited[i, j] = false;
+            return result;
+        }
     }
 }
