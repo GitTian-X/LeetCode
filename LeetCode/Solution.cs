@@ -2426,5 +2426,96 @@ namespace LeetCode
             visited[i, j] = false;
             return result;
         }
+        public int RemoveDuplicates1(int[] nums)
+        {
+            int j = 1, count = 1;
+            for (int i = 1; i < nums.Length; i++)
+            {
+                if (nums[i] == nums[i - 1])
+                {
+                    count++;
+                }
+                else
+                {
+                    count = 1;
+                }
+                if (count <= 2)
+                {
+                    nums[j++] = nums[i];
+                }
+            }
+            return j;
+        }
+        public bool Search1(int[] nums, int target)
+        {
+            if (nums == null)
+            {
+                return false;
+            }
+            int left = 0, right = nums.Length - 1;
+            while (left <= right)
+            {
+                if (nums[left] == nums[right] && left != right)
+                {
+                    left++;
+                    continue;
+                }
+                int mid = left + (right - left) / 2;
+                if (nums[mid] == target)
+                {
+                    return true;
+                }
+                if (nums[left] <= nums[mid])
+                {
+                    if (nums[left] <= target && nums[mid] > target)
+                    {
+                        right = mid - 1;
+                    }
+                    else
+                    {
+                        left = mid + 1;
+                    }
+                }
+                else
+                {
+                    if (nums[right] >= target && nums[mid] < target)
+                    {
+                        left = mid + 1;
+                    }
+                    else
+                    {
+                        right = mid - 1;
+                    }
+                }
+            }
+            return false;
+        }
+        public ListNode DeleteDuplicates(ListNode head)
+        {
+            if (head == null || head.next == null)
+            {
+                return head;
+            }
+            ListNode dummy = new ListNode(-1);
+            dummy.next = head;
+            ListNode slow = dummy;
+            ListNode fast = head;
+            while (fast != null)
+            {
+                if (fast.val != fast.next?.val)
+                {
+                    if (slow.next == fast)
+                    {
+                        slow = fast;
+                    }
+                    else
+                    {
+                        slow.next = fast.next;
+                    }
+                }
+                fast = fast.next;
+            }
+            return dummy.next;
+        }
     }
 }
