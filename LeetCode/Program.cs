@@ -8,12 +8,9 @@ namespace LeetCode
         {
             Solution solution = new Solution();
             ListNode l1 = new ListNode(1);
-            l1.next = new ListNode(2);
-            l1.next.next = new ListNode(4);
-            ListNode l2 = new ListNode(1);
-            l2.next = new ListNode(3);
-            l2.next.next = new ListNode(4);
-            Console.WriteLine(solution.Search1(new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1}, 2));
+            l1.next = new ListNode(1);
+            l1.next.next = new ListNode(2);
+            Console.WriteLine(solution.MaximalRectangle(new char[][] { new char[] { '1'} }));
         }
     }
 }

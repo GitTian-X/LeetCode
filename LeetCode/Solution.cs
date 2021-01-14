@@ -2517,5 +2517,107 @@ namespace LeetCode
             }
             return dummy.next;
         }
+        public ListNode DeleteDuplicates1(ListNode head)
+        {
+            if (head == null || head.next == null)
+            {
+                return head;
+            }
+            ListNode dummy = new ListNode(-1);
+            dummy.next = head;
+            ListNode slow = dummy;
+            ListNode fast = head;
+            while (fast != null)
+            {
+                if (fast.val != fast.next?.val)
+                {
+                    if (slow.next != fast)
+                    {
+                        slow.next = fast;
+                    }
+                    slow = fast;
+                }
+                fast = fast.next;
+            }
+            return dummy.next;
+        }
+        public int LargestRectangleArea(int[] heights)
+        {
+            int n = heights.Length;
+            int[] left = new int[n];
+            int[] right = new int[n];
+            Array.Fill(right, n);
+            Stack<int> monoStack = new Stack<int>();
+            for (int i = 0; i < n; i++)
+            {
+                while (monoStack.Count != 0 && heights[monoStack.Peek()] >= heights[i])
+                {
+                    right[monoStack.Peek()] = i;
+                    monoStack.Pop();
+                }
+                left[i] = monoStack.Count == 0 ? -1 : monoStack.Peek();
+                monoStack.Push(i);
+            }
+            int ans = 0;
+            for (int i = 0; i < n; i++)
+            {
+                ans = Math.Max(ans, (right[i] - left[i] - 1) * heights[i]);
+            }
+            return ans;
+        }
+        public int MaximalRectangle(char[][] matrix)
+        {
+            int m = matrix.Length;
+            if (m == 0)
+            {
+                return 0;
+            }
+            int n = matrix[0].Length;
+            int[,] left = new int[m, n];
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (matrix[i][j] == '1')
+                    {
+                        left[i, j] = j == 0 ? 1 : left[i, j - 1] + 1;
+                    }
+                }
+            }
+            int ret = 0;
+            for (int j = 0; j < n; j++)
+            {
+                int[] up = new int[m];
+                int[] down = new int[m];
+                Stack<int> stack = new Stack<int>();
+                for (int i = 0; i < m; i++)
+                {
+                    while (stack.Count != 0 && left[stack.Peek(), j] >= left[i, j])
+                    {
+                        stack.Pop();
+                    }
+                    up[i] = stack.Count == 0 ? -1 : stack.Peek();
+                    stack.Push(i);
+                }
+                stack.Clear();
+                for (int i = m - 1; i >= 0; i--)
+                {
+                    while (stack.Count != 0 && left[stack.Peek(), j] >= left[i, j])
+                    {
+                        stack.Pop();
+                    }
+                    down[i] = stack.Count == 0 ? m : stack.Peek();
+                    stack.Push(i);
+                }
+
+                for (int i = 0; i < m; i++)
+                {
+                    int height = down[i] - up[i] - 1;
+                    int area = height * left[i, j];
+                    ret = Math.Max(ret, area);
+                }
+            }
+            return ret;
+        }
     }
 }
