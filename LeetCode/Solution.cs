@@ -2619,5 +2619,79 @@ namespace LeetCode
             }
             return ret;
         }
+        public ListNode Partition(ListNode head, int x)
+        {
+            ListNode small = new ListNode(0);
+            ListNode smallHead = small;
+            ListNode large = new ListNode(0);
+            ListNode largeHead = large;
+            while (head != null)
+            {
+                if (head.val < x)
+                {
+                    small.next = head;
+                    small = small.next;
+                }
+                else
+                {
+                    large.next = head;
+                    large = large.next;
+                }
+                head = head.next;
+            }
+            large.next = null;
+            small.next = largeHead.next;
+            return smallHead.next;
+        }
+        public bool IsScramble(string s1, string s2)
+        {
+            if (s1.Length != s2.Length)
+            {
+                return false;
+            }
+            if (s1.Equals(s2))
+            {
+                return true;
+            }
+            int[] letters = new int[26];
+            for (int i = 0; i < s1.Length; i++)
+            {
+                letters[s1[i] - 'a']++;
+                letters[s2[i] - 'a']--;
+            }
+            for (int i = 0; i < 26; i++)
+            {
+                if (letters[i] != 0)
+                {
+                    return false;
+                }
+            }
+            for (int i = 1; i < s1.Length; i++)
+            {
+                //对应情况 1 ，判断 S1 的子树能否变为 S2 相应部分
+                if (IsScramble(s1.Substring(0, i), s2.Substring(0, i)) && IsScramble(s1.Substring(i), s2.Substring(i)))
+                {
+                    return true;
+                }
+                //对应情况 2 ，S1 两个子树先进行了交换，然后判断 S1 的子树能否变为 S2 相应部分
+                if (IsScramble(s1.Substring(i), s2.Substring(0, s2.Length - i)) &&
+                   IsScramble(s1.Substring(0, i), s2.Substring(s2.Length - i)))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public void Merge(int[] nums1, int m, int[] nums2, int n)
+        {
+            int p1 = m - 1;
+            int p2 = n - 1;
+            int p = m + n - 1;
+            while (p1 >= 0 && p2 >= 0)
+            {
+                nums1[p--] = nums1[p1] < nums2[p2] ? nums2[p2--] : nums1[p1--];
+            }
+            Array.Copy(nums2, 0, nums1, 0, p2 + 1);
+        }
     }
 }
