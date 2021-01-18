@@ -2693,5 +2693,83 @@ namespace LeetCode
             }
             Array.Copy(nums2, 0, nums1, 0, p2 + 1);
         }
+        public IList<int> GrayCode(int n)
+        {
+            IList<int> res = new List<int>();
+            res.Add(0);
+            int head = 1;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = res.Count - 1; j >= 0; j--)
+                {
+                    res.Add(head + res[j]);
+                }
+                head <<= 1;
+            }
+            return res;
+        }
+        public IList<IList<int>> SubsetsWithDup(int[] nums)
+        {
+            Array.Sort(nums);
+            IList<IList<int>> lists = new List<IList<int>>();
+            int subsetNum = 1 << nums.Length;
+            for (int i = 0; i < subsetNum; i++)
+            {
+                IList<int> list = new List<int>();
+                bool illegal = false;
+                for (int j = 0; j < nums.Length; j++)
+                {
+                    //当前位是 1
+                    if ((i >> j & 1) == 1)
+                    {
+                        //当前是重复数字，并且前一位是 0，跳过这种情况
+                        if (j > 0 && nums[j] == nums[j - 1] && (i >> (j - 1) & 1) == 0)
+                        {
+                            illegal = true;
+                            break;
+                        }
+                        else
+                        {
+                            list.Add(nums[j]);
+                        }
+                    }
+                }
+                if (!illegal)
+                {
+                    lists.Add(list);
+                }
+
+            }
+            return lists;
+        }
+        public int NumDecodings(string s)
+        {
+            if (s[0] == '0')
+            {
+                return 0;
+            }
+            int pre = 1, curr = 1;
+            for (int i = 1; i < s.Length; i++)
+            {
+                int tmp = curr;
+                if (s[i] == '0')
+                {
+                    if (s[i - 1] == '1' || s[i - 1] == '2')
+                    {
+                        curr = pre;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else if(s[i - 1] == '1' || (s[i - 1] == '2' && s[i] >= '1' && s[i] <= '6'))
+                {
+                    curr += pre;
+                }
+                pre = tmp;
+            }
+            return curr;
+        }
     }
 }
