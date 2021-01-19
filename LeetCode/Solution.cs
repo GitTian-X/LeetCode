@@ -2771,5 +2771,119 @@ namespace LeetCode
             }
             return curr;
         }
+        public ListNode ReverseBetween(ListNode head, int m, int n)
+        {
+            if (head == null)
+            {
+                return null;
+            }
+            ListNode cur = head, prev = null;
+            while (m > 1)
+            {
+                prev = cur;
+                cur = cur.next;
+                m--;
+                n--;
+            }
+            ListNode con = prev, tail = cur;
+            ListNode third = null;
+            while (n > 0)
+            {
+                third = cur.next;
+                cur.next = prev;
+                prev = cur;
+                cur = third;
+                n--;
+            }
+            if (con != null)
+            {
+                con.next = prev;
+            }
+            else
+            {
+                head = prev;
+            }
+            tail.next = cur;
+            return head;
+        }
+        public IList<string> RestoreIpAddresses(string s)
+        {
+            IList<string> ans = new List<string>();
+            int[] segments = new int[4];
+            DFS5(ans, s, 0, 0, segments);
+            return ans;
+        }
+        private void DFS5(IList<string> ans, string s, int segId, int segStart, int[] segments)
+        {
+            if (segId == 4)
+            {
+                if (segStart == s.Length)
+                {
+                    StringBuilder ip = new StringBuilder();
+                    for (int i = 0; i < 4; i++)
+                    {
+                        ip.Append(segments[i]);
+                        if (i != 3)
+                        {
+                            ip.Append('.');
+                        }
+                    }
+                    ans.Add(ip.ToString());
+                }
+                return;
+            }
+            if (segStart == s.Length)
+            {
+                return;
+            }
+            if (s[segStart] == '0')
+            {
+                segments[segId] = 0;
+                DFS5(ans, s, segId + 1, segStart + 1, segments);
+            }
+            int addr = 0;
+            for (int segEnd = segStart; segEnd < s.Length; segEnd++)
+            {
+                addr = addr * 10 + (s[segEnd] - '0');
+                if (addr > 0 && addr <= 0xFF)
+                {
+                    segments[segId] = addr;
+                    DFS5(ans, s, segId + 1, segEnd + 1, segments);
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        public class TreeNode
+        {
+            public int val;
+            public TreeNode left;
+            public TreeNode right;
+            public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
+            {
+                this.val = val;
+                this.left = left;
+                this.right = right;
+            }
+        }
+        public IList<int> InorderTraversal(TreeNode root)
+        {
+            IList<int> ans = new List<int>();
+            Stack<TreeNode> stack = new Stack<TreeNode>();
+            while (root !=null || stack.Count != 0)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+                root = stack.Pop();
+                ans.Add(root.val);
+                root = root.right;
+            }
+            return ans;
+        }
     }
 }
