@@ -2885,5 +2885,73 @@ namespace LeetCode
             }
             return ans;
         }
+        public IList<TreeNode> GenerateTrees(int n)
+        {
+            if (n == 0)
+            {
+                return new List<TreeNode>();
+            }
+            return GenerateTrees(1, n);
+        }
+        private List<TreeNode> GenerateTrees(int start, int end)
+        {
+            List<TreeNode> allTrees = new List<TreeNode>();
+            if (start > end)
+            {
+                allTrees.Add(null);
+                return allTrees;
+            }
+            for (int i = start; i <= end; i++)
+            {
+                List<TreeNode> leftTrees = GenerateTrees(start, i - 1);
+                List<TreeNode> rightTrees = GenerateTrees(i + 1, end);
+                foreach (var left in leftTrees)
+                {
+                    foreach (var right in rightTrees)
+                    {
+                        TreeNode curTree = new TreeNode(i);
+                        curTree.left = left;
+                        curTree.right = right;
+                        allTrees.Add(curTree);
+                    }
+                }
+            }
+            return allTrees;
+        }
+        public int NumTrees(int n)
+        {
+            long ans = 1;
+            for (int i = 0; i < n; i++)
+            {
+                ans = ans * 2 * (2 * i + 1) / (i + 2);
+            }
+            return (int)ans;
+        }
+        public bool IsInterleave(string s1, string s2, string s3)
+        {
+            int n = s1.Length, m = s2.Length, t = s3.Length;
+            if (n + m != t)
+            {
+                return false;
+            }
+            bool[] f = new bool[m + 1];
+            f[0] = true;
+            for (int i = 0; i <= n; i++)
+            {
+                for (int j = 0; j <= m; j++)
+                {
+                    int p = i + j - 1;
+                    if (i > 0)
+                    {
+                        f[j] = f[j] && s1[i - 1] == s3[p];
+                    }
+                    if (j > 0)
+                    {
+                        f[j] = f[j] || (f[j - 1] && s2[j - 1] == s3[p]);
+                    }
+                }
+            }
+            return f[m];
+        }
     }
 }
