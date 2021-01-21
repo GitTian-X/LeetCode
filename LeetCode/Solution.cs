@@ -2953,5 +2953,99 @@ namespace LeetCode
             }
             return f[m];
         }
+        public bool IsValidBST(TreeNode root)
+        {
+            Stack<TreeNode> stack = new Stack<TreeNode>();
+            double min = -double.MaxValue;
+            while (stack.Count != 0 || root != null)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+                root = stack.Pop();
+                if (root.val <= min)
+                {
+                    return false;
+                }
+                min = root.val;
+                root = root.right;
+            }
+            return true;
+        }
+        public void RecoverTree(TreeNode root)
+        {
+            TreeNode x = null, y = null, pred = null, predecessor = null;
+            while (root != null)
+            {
+                if (root.left != null)
+                {
+                    predecessor = root.left;
+                    while (predecessor.right != null && predecessor.right != root)
+                    {
+                        predecessor = predecessor.right;
+                    }
+                    if (predecessor.right == null)
+                    {
+                        predecessor.right = root;
+                        root = root.left;
+                    }
+                    else
+                    {
+                        if (pred != null && root.val < pred.val)
+                        {
+                            y = root;
+                            if (x == null)
+                            {
+                                x = pred;
+                            }
+                        }
+                        pred = root;
+                        predecessor.right = null;
+                        root = root.right;
+                    }
+                }
+                else
+                {
+                    if (pred != null && root.val < pred.val)
+                    {
+                        y = root;
+                        if (x == null)
+                        {
+                            x = pred;
+                        }
+                    }
+                    pred = root;
+                    root = root.right;
+                }
+            }
+            Swap(x, y);
+        }
+        private void Swap(TreeNode x, TreeNode y)
+        {
+            int tmp = x.val;
+            x.val = y.val;
+            y.val = tmp;
+        }
+        public bool IsSameTree(TreeNode p, TreeNode q)
+        {
+            if (p == null && q == null)
+            {
+                return true;
+            }
+            else if(p == null || q == null)
+            {
+                return false;
+            }
+            else if (p.val != q.val)
+            {
+                return false;
+            }
+            else
+            {
+                return IsSameTree(p.left, q.left) && IsSameTree(p.right, q.right);
+            }
+        }
     }
 }
