@@ -3047,5 +3047,91 @@ namespace LeetCode
                 return IsSameTree(p.left, q.left) && IsSameTree(p.right, q.right);
             }
         }
+        public bool IsSymmetric(TreeNode root)
+        {
+            return Check(root, root);
+        }
+
+        private bool Check(TreeNode left, TreeNode right)
+        {
+            if (left == null && right == null)
+            {
+                return true;
+            }
+            if (left == null || right == null)
+            {
+                return false;
+            }
+            return left.val == right.val && Check(left.left, right.right) && Check(left.right, right.left);
+        }
+        public IList<IList<int>> LevelOrder(TreeNode root)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            if (root == null)
+            {
+                return res;
+            }
+            Queue<TreeNode> queue = new Queue<TreeNode>();
+            queue.Enqueue(root);
+            while (queue.Count != 0)
+            {
+                List<int> level = new List<int>();
+                int currentLevelSize = queue.Count;
+                for (int i = 1; i <= currentLevelSize; i++)
+                {
+                    TreeNode node = queue.Dequeue();
+                    level.Add(node.val);
+                    if (node.left != null)
+                    {
+                        queue.Enqueue(node.left);
+                    }
+                    if (node.right != null)
+                    {
+                        queue.Enqueue(node.right);
+                    }
+                }
+                res.Add(level);
+            }
+            return res;
+        }
+        public IList<IList<int>> ZigzagLevelOrder(TreeNode root)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            if (root == null)
+            {
+                return res;
+            }
+            Queue<TreeNode> queue = new Queue<TreeNode>();
+            queue.Enqueue(root);
+            bool isOrderLeft = true;
+            while (queue.Count != 0)
+            {
+                List<int> level = new List<int>();
+                int currentLevelSize = queue.Count;
+                for (int i = 1; i <= currentLevelSize; i++)
+                {
+                    TreeNode node = queue.Dequeue();
+                    if (isOrderLeft)
+                    {
+                        level.Add(node.val);
+                    }
+                    else
+                    {
+                        level.Insert(0, node.val);
+                    }
+                    if (node.left != null)
+                    {
+                        queue.Enqueue(node.left);
+                    }
+                    if (node.right != null)
+                    {
+                        queue.Enqueue(node.right);
+                    }
+                }
+                res.Add(level);
+                isOrderLeft = !isOrderLeft;
+            }
+            return res;
+        }
     }
 }
