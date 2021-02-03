@@ -3133,5 +3133,166 @@ namespace LeetCode
             }
             return res;
         }
+        public int MaxDepth(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+            else
+            {
+                int left = MaxDepth(root.left);
+                int right = MaxDepth(root.right);
+                return Math.Max(left, right) + 1;
+            }
+        }
+        private Hashtable indexHashtable = new System.Collections.Hashtable();
+        public TreeNode BuildTree1(int[] preorder, int[] inorder)
+        {
+            int n = preorder.Length;
+            for (int i = 0; i < n; i++)
+            {
+                indexHashtable.Add(inorder[i], i);
+            }
+            return MyBuildTree(preorder, inorder, 0, n - 1, 0, n - 1);
+        }
+
+        private TreeNode MyBuildTree(int[] preorder, int[] inorder, int preorderLeft, int preorderRight, int inorderLeft, int inorderRight)
+        {
+            if (preorderLeft > preorderRight)
+            {
+                return null;
+            }
+            // 前序遍历中的第一个节点就是根节点
+            int preorder_root = preorderLeft;
+            // 在中序遍历中定位根节点
+            int inorder_root = (int)indexHashtable[preorder[preorder_root]];
+
+            // 先把根节点建立出来
+            TreeNode root = new TreeNode(preorder[preorder_root]);
+            // 得到左子树中的节点数目
+            int size_left_subtree = inorder_root - inorderLeft;
+            // 递归地构造左子树，并连接到根节点
+            // 先序遍历中「从 左边界+1 开始的 size_left_subtree」个元素就对应了中序遍历中「从 左边界 开始到 根节点定位-1」的元素
+            root.left = MyBuildTree(preorder, inorder, preorderLeft + 1, preorderLeft + size_left_subtree, inorderLeft, inorder_root - 1);
+            // 递归地构造右子树，并连接到根节点
+            // 先序遍历中「从 左边界+1+左子树节点数目 开始到 右边界」的元素就对应了中序遍历中「从 根节点定位+1 到 右边界」的元素
+            root.right = MyBuildTree(preorder, inorder, preorderLeft + size_left_subtree + 1, preorderRight, inorder_root + 1, inorderRight);
+            return root;
+        }
+
+        public TreeNode BuildTree(int[] inorder, int[] postorder)
+        {
+            if (postorder == null || postorder.Length == 0)
+            {
+                return null;
+            }
+            TreeNode root = new TreeNode(postorder[postorder.Length - 1]);
+            Stack<TreeNode> stack = new Stack<TreeNode>();
+            stack.Push(root);
+            int inorderIndex = inorder.Length - 1;
+            for (int i = postorder.Length - 2; i >= 0; i--)
+            {
+                int postorderVal = postorder[i];
+                TreeNode node = stack.Peek();
+                if (node.val != inorder[inorderIndex])
+                {
+                    node.right = new TreeNode(postorderVal);
+                    stack.Push(node.right);
+                }
+                else
+                {
+                    while (stack.Count != 0 && stack.Peek().val == inorder[inorderIndex])
+                    {
+                        node = stack.Pop();
+                        inorderIndex--;
+                    }
+                    node.left = new TreeNode(postorderVal);
+                    stack.Push(node.left);
+                }
+            }
+            return root;
+        }
+        public IList<IList<int>> LevelOrderBottom(TreeNode root)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            if (root == null)
+            {
+                return res;
+            }
+            Queue<TreeNode> queue = new Queue<TreeNode>();
+            queue.Enqueue(root);
+            bool isOrderLeft = true;
+            while (queue.Count != 0)
+            {
+                List<int> level = new List<int>();
+                int currentLevelSize = queue.Count;
+                for (int i = 1; i <= currentLevelSize; i++)
+                {
+                    TreeNode node = queue.Dequeue();
+                    level.Add(node.val);
+                    if (node.left != null)
+                    {
+                        queue.Enqueue(node.left);
+                    }
+                    if (node.right != null)
+                    {
+                        queue.Enqueue(node.right);
+                    }
+                }
+                res.Insert(0, level);
+                isOrderLeft = !isOrderLeft;
+            }
+            return res;
+        }
+        public TreeNode SortedArrayToBST(int[] nums)
+        {
+            return Helper(nums, 0, nums.Length - 1);
+        }
+        private TreeNode Helper(int[] nums, int left, int right)
+        {
+            if (left > right)
+            {
+                return null;
+            }
+            int mid = (left + right + 1) / 2;
+            TreeNode root = new TreeNode(nums[mid]);
+            root.left = Helper(nums, left, mid - 1);
+            root.right = Helper(nums, mid + 1, right);
+            return root;
+        }
+        private ListNode globalHead;
+        public TreeNode SortedListToBST(ListNode head)
+        {
+            globalHead = head;
+            int len = GetLengthOfListNode(head);
+            return Helper(0, len - 1);
+        }
+
+        private TreeNode Helper(int left, int right)
+        {
+            if (left > right)
+            {
+                return null;
+            }
+            int mid = (left + right + 1) / 2;
+            TreeNode root = new TreeNode();
+            root.left = Helper(left, mid - 1);
+            root.val = globalHead.val;
+            globalHead = globalHead.next;
+            root.right = Helper(mid + 1, right);
+            return root;
+        }
+
+        private int GetLengthOfListNode(ListNode head)
+        {
+            int len = 0;
+            while (head != null)
+            {
+                len++;
+                head = head.next;
+            }
+            return len;
+        }
     }
 }
