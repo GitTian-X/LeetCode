@@ -3294,5 +3294,59 @@ namespace LeetCode
             }
             return len;
         }
+        public bool IsBalanced(TreeNode root)
+        {
+            return Height(root) >= 0;
+        }
+        private int Height(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+            int leftHeight = Height(root.left);
+            int rightHeight = Height(root.right);
+            if (leftHeight == -1 || rightHeight == -1 || Math.Abs(leftHeight - rightHeight) > 1)
+            {
+                return -1;
+            }
+            else
+            {
+                return Math.Max(leftHeight, rightHeight) + 1;
+            }
+        }
+        public int MinDepth(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+            if (root.left == null && root.right == null)
+            {
+                return 1;
+            }
+            int minHeight = int.MaxValue;
+            if (root.left != null)
+            {
+                minHeight = Math.Min(MinDepth(root.left), minHeight);
+            }
+            if (root.right != null)
+            {
+                minHeight = Math.Min(MinDepth(root.right), minHeight);
+            }
+            return minHeight + 1;
+        }
+        public bool HasPathSum(TreeNode root, int targetSum)
+        {
+            if (root == null)
+            {
+                return false;
+            }
+            if (root.left == null && root.right == null)
+            {
+                return targetSum == root.val;
+            }
+            return HasPathSum(root.left, targetSum - root.val) || HasPathSum(root.right, targetSum - root.val);
+        }
     }
 }
