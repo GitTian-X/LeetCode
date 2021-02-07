@@ -3348,5 +3348,73 @@ namespace LeetCode
             }
             return HasPathSum(root.left, targetSum - root.val) || HasPathSum(root.right, targetSum - root.val);
         }
+        private IList<IList<int>> res = new List<IList<int>>();
+        List<int> path = new List<int>();
+        public IList<IList<int>> PathSum(TreeNode root, int targetSum)
+        {
+            DFS(root, targetSum);
+            return res;
+        }
+        private void DFS(TreeNode root, int sum)
+        {
+            if (root == null)
+            {
+                return;
+            }
+            path.Add(root.val);
+            sum -= root.val;
+            if (root.left == null && root.right == null && sum == 0)
+            {
+                res.Add(new List<int>(path));
+            }
+            DFS(root.left, sum);
+            DFS(root.right, sum);
+            path.RemoveAt(path.Count - 1);
+        }
+        public void Flatten(TreeNode root)
+        {
+            TreeNode curr = root;
+            while (curr != null)
+            {
+                if (curr.left != null)
+                {
+                    TreeNode next = curr.left;
+                    TreeNode predecessor = next;
+                    while (predecessor.right != null)
+                    {
+                        predecessor = predecessor.right;
+                    }
+                    predecessor.right = curr.right;
+                    curr.left = null;
+                    curr.right = next;
+                }
+                curr = curr.right;
+            }
+        }
+        public int NumDistinct(string s, string t)
+        {
+            int sLen = s.Length;
+            int tLen = t.Length;
+            int[, ] dp = new int[tLen + 1, sLen + 1];
+            for (int i = 0; i < sLen + 1; i++)
+            {
+                dp[0, i] = 1;
+            }
+            for (int i = 1; i < tLen + 1; i++)
+            {
+                for (int j = 1; j < sLen + 1; j++)
+                {
+                    if (t[i - 1] == s[j - 1])
+                    {
+                        dp[i, j] = dp[i - 1, j - 1] + dp[i, j - 1];
+                    }
+                    else
+                    {
+                        dp[i, j] = dp[i, j - 1];
+                    }
+                }
+            }
+            return dp[tLen, sLen];
+        }
     }
 }
