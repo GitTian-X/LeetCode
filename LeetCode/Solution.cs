@@ -3416,5 +3416,121 @@ namespace LeetCode
             }
             return dp[tLen, sLen];
         }
+        public class Node
+        {
+            public int val;
+            public Node left;
+            public Node right;
+            public Node next;
+
+            public Node() { }
+
+            public Node(int _val)
+            {
+                val = _val;
+            }
+
+            public Node(int _val, Node _left, Node _right, Node _next)
+            {
+                val = _val;
+                left = _left;
+                right = _right;
+                next = _next;
+            }
+        }
+        public Node Connect(Node root)
+        {
+            if (root == null)
+            {
+                return root;
+            }
+            Node leftmost = root;
+            while (leftmost.left != null)
+            {
+                Node head = leftmost;
+                while (head != null)
+                {
+                    head.left.next = head.right;
+                    if (head.next != null)
+                    {
+                        head.right.next = head.next.left;
+                    }
+                    head = head.next;
+                }
+                leftmost = leftmost.left;
+            }
+            return root;
+        }
+        Node last = null;
+        Node nextStart = null;
+        public Node Connect1(Node root)
+        {
+            if (root == null)
+            {
+                return root;
+            }
+            Node start = root;
+            while (start != null)
+            {
+                last = null;
+                nextStart = null;
+                for (Node p = start; p != null; p = p.next)
+                {
+                    if (p.left != null)
+                    {
+                        Handle(p.left);
+                    }
+                    if (p.right != null)
+                    {
+                        Handle(p.right);
+                    }
+                }
+                start = nextStart;
+            }
+            return root;
+        }
+        private void Handle(Node p)
+        {
+            if (last != null)
+            {
+                last.next = p;
+            }
+            if (nextStart == null)
+            {
+                nextStart = p;
+            }
+            last = p;
+        }
+        public IList<IList<int>> Generate(int numRows)
+        {
+            IList<IList<int>> res = new List<IList<int>>();
+            for (int i = 0; i < numRows; i++)
+            {
+                IList<int> row = new List<int>();
+                for (int j = 0; j <= i; j++)
+                {
+                    if (j == 0 || j == i)
+                    {
+                        row.Add(1);
+                    }
+                    else
+                    {
+                        row.Add(res[i - 1][j] + res[i - 1][j - 1]);
+                    }
+                }
+                res.Add(row);
+            }
+            return res;
+        }
+        public IList<int> GetRow(int rowIndex)
+        {
+            IList<int> res = new List<int>();
+            res.Add(1);
+            for (int i = 1; i <= rowIndex; i++)
+            {
+                res.Add((int)((long)res[i - 1] * (rowIndex - i + 1) / i));
+            }
+            return res;
+        }
     }
 }
