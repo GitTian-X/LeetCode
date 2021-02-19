@@ -10,7 +10,7 @@ namespace LeetCode
             ListNode l1 = new ListNode(1);
             l1.next = new ListNode(1);
             l1.next.next = new ListNode(2);
-            Console.WriteLine(solution.NumDecodings("1123"));
+            Console.WriteLine(solution.MaxProfit(new int[] { 2, 1, 4 }));
         }
     }
 }

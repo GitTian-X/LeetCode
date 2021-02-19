@@ -3532,5 +3532,53 @@ namespace LeetCode
             }
             return res;
         }
+        public int MinimumTotal(IList<IList<int>> triangle)
+        {
+            int n = triangle.Count;
+            int[] f = new int[n];
+            f[0] = triangle[0][0];
+            for (int i = 1; i < n; i++)
+            {
+                f[i] = f[i - 1] + triangle[i][i];
+                for (int j = i - 1; j > 0; j--)
+                {
+                    f[j] = Math.Min(f[j - 1], f[j]) + triangle[i][j];
+                }
+                f[0] += triangle[i][0];
+            }
+            int minTotal = f[0];
+            for (int i = 1; i < n; i++)
+            {
+                minTotal = Math.Min(minTotal, f[i]);
+            }
+            return minTotal;
+        }
+        public int MaxProfit(int[] prices)
+        {
+            int minPrice = int.MaxValue;
+            int maxProfit = 0;
+            for (int i = 0; i < prices.Length; i++)
+            {
+                if (prices[i] < minPrice)
+                {
+                    minPrice = prices[i];
+                }
+                else if(prices[i] - minPrice > maxProfit)
+                {
+                    maxProfit = prices[i] - minPrice;
+                }
+            }
+            return maxProfit;
+        }
+        public int MaxProfit1(int[] prices)
+        {
+            int ans = 0;
+            int len = prices.Length;
+            for (int i = 1; i < len; i++)
+            {
+                ans += Math.Max(prices[i] - prices[i - 1], 0);
+            }
+            return ans;
+        }
     }
 }
