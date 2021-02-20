@@ -3580,5 +3580,63 @@ namespace LeetCode
             }
             return ans;
         }
+        public int MaxProfit2(int[] prices)
+        {
+            int n = prices.Length;
+            int buy1 = -prices[0], sell1 = 0;
+            int buy2 = -prices[0], sell2 = 0;
+            for (int i = 1; i < n; ++i)
+            {
+                buy1 = Math.Max(buy1, -prices[i]);
+                sell1 = Math.Max(sell1, buy1 + prices[i]);
+                buy2 = Math.Max(buy2, sell1 - prices[i]);
+                sell2 = Math.Max(sell2, buy2 + prices[i]);
+            }
+            return sell2;
+        }
+        int maxSum = int.MinValue;
+        public int MaxPathSum(TreeNode root)
+        {
+            MaxGain(root);
+            return maxSum;
+        }
+
+        private int MaxGain(TreeNode root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+            int leftGain = Math.Max(MaxGain(root.left), 0);
+            int rightGain = Math.Max(MaxGain(root.right), 0);
+            int price = root.val + leftGain + rightGain;
+            maxSum = Math.Max(price, maxSum);
+            return root.val + Math.Max(leftGain, rightGain);
+        }
+        public bool IsPalindrome(string s)
+        {
+            int left = 0, right = s.Length - 1;
+            while (left < right)
+            {
+                while (left < right && !char.IsLetterOrDigit(s[left]))
+                {
+                    left++;
+                }
+                while (left < right && !char.IsLetterOrDigit(s[right]))
+                {
+                    right--;
+                }
+                if (left < right)
+                {
+                    if (char.ToLower(s[left]) != char.ToLower(s[right]))
+                    {
+                        return false;
+                    }
+                    left++;
+                    right--;
+                }
+            }
+            return true;
+        }
     }
 }
