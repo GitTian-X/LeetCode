@@ -3638,5 +3638,218 @@ namespace LeetCode
             }
             return true;
         }
+        private const int INF = 1 << 20;
+        private Dictionary<string, int> wordId = new Dictionary<string, int>();
+        private List<string> idWord = new List<string>();
+        private List<int>[] edges;
+        public IList<IList<string>> FindLadders(string beginWord, string endWord, IList<string> wordList)
+        {
+            int id = 0;
+            foreach (var word in wordList)
+            {
+                if (!wordId.ContainsKey(word))
+                {
+                    wordId.Add(word, id++);
+                    idWord.Add(word);
+                }
+            }
+            if (!wordId.ContainsKey(endWord))
+            {
+                return new List<IList<string>>();
+            }
+            if (!wordId.ContainsKey(beginWord))
+            {
+                wordId.Add(beginWord, id++);
+                idWord.Add(beginWord);
+            }
+            edges = new List<int>[idWord.Count];
+            for (int i = 0; i < idWord.Count; i++)
+            {
+                edges[i] = new List<int>();
+            }
+            for (int i = 0; i < idWord.Count; i++)
+            {
+                for (int j = i + 1; j < idWord.Count; j++)
+                {
+                    if (TransfromCheck(idWord[i], idWord[j]))
+                    {
+                        edges[i].Add(j);
+                        edges[j].Add(i);
+                    }
+                }
+            }
+            int dest = wordId[endWord];
+            List<IList<string>> res = new List<IList<string>>();
+            int[] cost = new int[id];
+            for (int i = 0; i < id; i++)
+            {
+                cost[i] = INF;
+            }
+            Queue<List<int>> q = new Queue<List<int>>();
+            List<int> tmpBegin = new List<int>();
+            tmpBegin.Add(wordId[beginWord]);
+            q.Enqueue(tmpBegin);
+            cost[wordId[beginWord]] = 0;
+            while (q.Count != 0)
+            {
+                List<int> now = q.Dequeue();
+                int last = now[now.Count - 1];
+                if (last == dest)
+                {
+                    List<string> tmp = new List<string>();
+                    foreach (var index in now)
+                    {
+                        tmp.Add(idWord[index]);
+                    }
+                    res.Add(tmp);
+                }
+                else
+                {
+                    for (int i = 0; i < edges[last].Count; i++)
+                    {
+                        int to = edges[last][i];
+                        if (cost[last] + 1 <= cost[to])
+                        {
+                            cost[to] = cost[last] + 1;
+                            List<int> tmp = new List<int>(now);
+                            tmp.Add(to);
+                            q.Enqueue(tmp);
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+
+        private bool TransfromCheck(string v1, string v2)
+        {
+            int diff = 0;
+            for (int i = 0; i < v1.Length && diff < 2; i++)
+            {
+                if (v1[i] != v2[i])
+                {
+                    diff++;
+                }
+            }
+            return diff == 1;
+        }
+        private Dictionary<string, int> wordId1 = new Dictionary<string, int>();
+        private List<List<int>> edge = new List<List<int>>();
+        private int nodeNum = 0;
+        public int LadderLength(string beginWord, string endWord, IList<string> wordList)
+        {
+            foreach (var word in wordList)
+            {
+                AddEdge(word);
+            }
+            AddEdge(beginWord);
+            if (!wordId1.ContainsKey(endWord))
+            {
+                return 0;
+            }
+            int[] disBegin = new int[nodeNum];
+            Array.Fill(disBegin, int.MaxValue);
+            int beginId = wordId1[beginWord];
+            disBegin[beginId] = 0;
+            Queue<int> queBegin = new Queue<int>();
+            queBegin.Enqueue(beginId);
+            int[] disEnd = new int[nodeNum];
+            Array.Fill(disEnd, int.MaxValue);
+            int endId = wordId1[endWord];
+            disEnd[endId] = 0;
+            Queue<int> queEnd = new Queue<int>();
+            queEnd.Enqueue(endId);
+            while (queBegin.Count != 0 && queEnd.Count != 0)
+            {
+                int queBeginSize = queBegin.Count;
+                for (int i = 0; i < queBeginSize; ++i)
+                {
+                    int nodeBegin = queBegin.Dequeue();
+                    if (disEnd[nodeBegin] != int.MaxValue)
+                    {
+                        return (disBegin[nodeBegin] + disEnd[nodeBegin]) / 2 + 1;
+                    }
+                    foreach (int it in edge[nodeBegin])
+                    {
+                        if (disBegin[it] == int.MaxValue)
+                        {
+                            disBegin[it] = disBegin[nodeBegin] + 1;
+                            queBegin.Enqueue(it);
+                        }
+                    }
+                }
+
+                int queEndSize = queEnd.Count;
+                for (int i = 0; i < queEndSize; ++i)
+                {
+                    int nodeEnd = queEnd.Dequeue();
+                    if (disBegin[nodeEnd] != int.MaxValue)
+                    {
+                        return (disBegin[nodeEnd] + disEnd[nodeEnd]) / 2 + 1;
+                    }
+                    foreach (int it in edge[nodeEnd])
+                    {
+                        if (disEnd[it] == int.MaxValue)
+                        {
+                            disEnd[it] = disEnd[nodeEnd] + 1;
+                            queEnd.Enqueue(it);
+                        }
+                    }
+                }
+            }
+            return 0;
+        }
+
+        private void AddEdge(string word)
+        {
+            AddWord(word);
+            int id1 = wordId1[word];
+            char[] array = word.ToCharArray();
+            int length = array.Length;
+            for (int i = 0; i < length; i++)
+            {
+                char tmp = array[i];
+                array[i] = '*';
+                string newWord = new string(array);
+                AddWord(newWord);
+                int id2 = wordId1[newWord];
+                edge[id1].Add(id2);
+                edge[id2].Add(id1);
+                array[i] = tmp;
+            }
+        }
+
+        private void AddWord(string word)
+        {
+            if (!wordId1.ContainsKey(word))
+            {
+                wordId1.Add(word, nodeNum++);
+                edge.Add(new List<int>());
+            }
+        }
+        public int LongestConsecutive(int[] nums)
+        {
+            HashSet<int> numSet = new HashSet<int>();
+            foreach (var num in nums)
+            {
+                numSet.Add(num);
+            }
+            int longestStreak = 0;
+            foreach (var num in numSet)
+            {
+                if (!numSet.Contains(num - 1))
+                {
+                    int currentNum = num;
+                    int currentStreak = 1;
+                    while (numSet.Contains(currentNum + 1))
+                    {
+                        currentNum += 1;
+                        currentStreak += 1;
+                    }
+                    longestStreak = Math.Max(longestStreak, currentStreak);
+                }
+            }
+            return longestStreak;
+        }
     }
 }
