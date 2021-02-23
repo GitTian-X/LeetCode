@@ -3851,5 +3851,114 @@ namespace LeetCode
             }
             return longestStreak;
         }
+        public int SumNumbers(TreeNode root)
+        {
+            return GetSum(root, 0);
+        }
+        private int GetSum(TreeNode root, int preSum)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+            int sum = preSum * 10 + root.val;
+            if (root.left == null && root.right == null)
+            {
+                return sum;
+            }
+            else
+            {
+                return GetSum(root.left, sum) + GetSum(root.right, sum);
+            }
+        }
+        int row130, height130;
+        public void Solve(char[][] board)
+        {
+            row130 = board.Length;
+            if (row130 == 0)
+            {
+                return;
+            }
+            height130 = board[0].Length;
+            for (int i = 0; i < row130; i++)
+            {
+                DFS(board, i, 0);
+                DFS(board, i, height130 - 1);
+            }
+            for (int i = 1; i < height130 - 1; i++)
+            {
+                DFS(board, 0, i);
+                DFS(board, row130 - 1, i);
+            }
+            for (int i = 0; i < row130; i++)
+            {
+                for (int j = 0; j < height130; j++)
+                {
+                    if (board[i][j] == 'A')
+                    {
+                        board[i][j] = 'O';
+                    }
+                    else if (board[i][j] == 'O')
+                    {
+                        board[i][j] = 'X';
+                    }
+                }
+            }
+        }
+
+        private void DFS(char[][] board, int i, int v)
+        {
+            if (i < 0 || i >= row130 || v < 0 || v >= height130 || board[i][v] != 'O')
+            {
+                return;
+            }
+            board[i][v] = 'A';
+            DFS(board, i + 1, v);
+            DFS(board, i - 1, v);
+            DFS(board, i, v + 1);
+            DFS(board, i, v - 1);
+        }
+        public IList<IList<string>> Partition(string s)
+        {
+            int len = s.Length;
+            List<IList<string>> res = new List<IList<string>>();
+            if (len == 0)
+            {
+                return res;
+            }
+            bool[,] dp = new bool[len, len];
+            for (int right = 0; right < len; right++)
+            {
+                for (int left = 0; left <= right; left++)
+                {
+                    if (s[left] == s[right] && (right - left <= 2 || dp[left + 1, right - 1]))
+                    {
+                        dp[left, right] = true;
+                    }
+                }
+            }
+            List<string> stack = new List<string>();
+            BackTracking(s, 0, len, dp, stack, res);
+            return res;
+        }
+
+        private void BackTracking(string s, int start, int len, bool[,] dp, List<string> path, List<IList<string>> res)
+        {
+            if (start == len)
+            {
+                res.Add(new List<string>(path));
+                return;
+            }
+            for (int i = start; i < len; i++)
+            {
+                if (!dp[start, i])
+                {
+                    continue;
+                }
+                path.Add(s.Substring(start, i + 1 - start));
+                BackTracking(s, i + 1, len, dp, path, res);
+                path.RemoveAt(path.Count - 1);
+            }
+        }
     }
 }
