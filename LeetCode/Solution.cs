@@ -735,7 +735,7 @@ namespace LeetCode
             ListNode dummyHead = new ListNode(0);
             dummyHead.next = head;
             ListNode tmp = dummyHead;
-            while (tmp.next !=null && tmp.next.next != null)
+            while (tmp.next != null && tmp.next.next != null)
             {
                 ListNode l1 = tmp.next;
                 ListNode l2 = tmp.next.next;
@@ -998,7 +998,7 @@ namespace LeetCode
                 {
                     maxLength = Math.Max(maxLength, right + left);
                 }
-                else if(right > left)
+                else if (right > left)
                 {
                     left = right = 0;
                 }
@@ -1126,7 +1126,7 @@ namespace LeetCode
                         continue;
                     }
                     mux1 = 0x01 << (board[i][j] - '1');
-                    mux2 = 0x01 << 9 <<(board[i][j] - '1');
+                    mux2 = 0x01 << 9 << (board[i][j] - '1');
                     mux3 = 0x01 << 9 << 9 << (board[i][j] - '1');
                     boxIndex = (i / 3) * 3 + j / 3;
                     if ((wow[i] & mux1) != mux1 && (wow[j] & mux2) != mux2 && (wow[boxIndex] & mux3) != mux3)
@@ -1756,7 +1756,8 @@ namespace LeetCode
             {
                 return new int[0][];
             }
-            Array.Sort(intervals, (int[] num1, int[] num2) => {
+            Array.Sort(intervals, (int[] num1, int[] num2) =>
+            {
                 return num1[0] - num2[0];
             });
             List<int[]> merged = new List<int[]>();
@@ -1786,7 +1787,7 @@ namespace LeetCode
                 {
                     if (!placed)
                     {
-                        ans.Add(new int[] { left, right});
+                        ans.Add(new int[] { left, right });
                         placed = true;
                     }
                     ans.Add(interval);
@@ -2032,7 +2033,7 @@ namespace LeetCode
             int carry = 0;
             for (int i = 0; i < length; i++)
             {
-                carry += i < a.Length ? a[a.Length - 1 - i] - '0' : 0; 
+                carry += i < a.Length ? a[a.Length - 1 - i] - '0' : 0;
                 carry += i < b.Length ? b[b.Length - 1 - i] - '0' : 0;
                 ans.Append((char)(carry % 2 + '0'));
                 carry /= 2;
@@ -2173,7 +2174,7 @@ namespace LeetCode
             {
                 return m + n;
             }
-            int[, ] dp = new int[m + 1, n + 1];
+            int[,] dp = new int[m + 1, n + 1];
             for (int i = 0; i <= m; i++)
             {
                 dp[i, 0] = i;
@@ -2405,7 +2406,7 @@ namespace LeetCode
                 return true;
             }
             visited[i, j] = true;
-            int[, ] directions = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
+            int[,] directions = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
             bool result = false;
             for (int k = 0; k < directions.Length / 2; k++)
             {
@@ -2763,7 +2764,7 @@ namespace LeetCode
                         return 0;
                     }
                 }
-                else if(s[i - 1] == '1' || (s[i - 1] == '2' && s[i] >= '1' && s[i] <= '6'))
+                else if (s[i - 1] == '1' || (s[i - 1] == '2' && s[i] >= '1' && s[i] <= '6'))
                 {
                     curr += pre;
                 }
@@ -2872,7 +2873,7 @@ namespace LeetCode
         {
             IList<int> ans = new List<int>();
             Stack<TreeNode> stack = new Stack<TreeNode>();
-            while (root !=null || stack.Count != 0)
+            while (root != null || stack.Count != 0)
             {
                 while (root != null)
                 {
@@ -3034,7 +3035,7 @@ namespace LeetCode
             {
                 return true;
             }
-            else if(p == null || q == null)
+            else if (p == null || q == null)
             {
                 return false;
             }
@@ -3395,7 +3396,7 @@ namespace LeetCode
         {
             int sLen = s.Length;
             int tLen = t.Length;
-            int[, ] dp = new int[tLen + 1, sLen + 1];
+            int[,] dp = new int[tLen + 1, sLen + 1];
             for (int i = 0; i < sLen + 1; i++)
             {
                 dp[0, i] = 1;
@@ -3422,12 +3423,22 @@ namespace LeetCode
             public Node left;
             public Node right;
             public Node next;
-
-            public Node() { }
+            public IList<Node> neighbors;
+            public Node()
+            {
+                val = 0;
+                neighbors = new List<Node>();
+            }
 
             public Node(int _val)
             {
                 val = _val;
+                neighbors = new List<Node>();
+            }
+            public Node(int _val, List<Node> _neighbors)
+            {
+                val = _val;
+                neighbors = _neighbors;
             }
 
             public Node(int _val, Node _left, Node _right, Node _next)
@@ -3563,7 +3574,7 @@ namespace LeetCode
                 {
                     minPrice = prices[i];
                 }
-                else if(prices[i] - minPrice > maxProfit)
+                else if (prices[i] - minPrice > maxProfit)
                 {
                     maxProfit = prices[i] - minPrice;
                 }
@@ -3959,6 +3970,82 @@ namespace LeetCode
                 BackTracking(s, i + 1, len, dp, path, res);
                 path.RemoveAt(path.Count - 1);
             }
+        }
+        public int MinCut(string s)
+        {
+            int len = s.Length;
+            if (len < 2)
+            {
+                return 0;
+            }
+            int[] dp = new int[len];
+            for (int i = 0; i < len; i++)
+            {
+                dp[i] = i;
+            }
+            bool[,] checkPalindrome = new bool[len, len];
+            for (int right = 0; right < len; right++)
+            {
+                for (int left = 0; left <= right; left++)
+                {
+                    if (s[left] == s[right] && (right - left <= 2 || checkPalindrome[left + 1, right - 1]))
+                    {
+                        checkPalindrome[left, right] = true;
+                    }
+                }
+            }
+            for (int i = 1; i < len; i++)
+            {
+                if (checkPalindrome[0, i])
+                {
+                    dp[i] = 0;
+                    continue;
+                }
+                for (int j = 0; j < i; j++)
+                {
+                    if (checkPalindrome[j + 1, i])
+                    {
+                        dp[i] = Math.Min(dp[i], dp[j] + 1);
+                    }
+                }
+            }
+            return dp[len - 1];
+        }
+        private Dictionary<Node, Node> visited = new Dictionary<Node, Node>();
+        public Node CloneGraph(Node node)
+        {
+            if (node == null)
+            {
+                return node;
+            }
+            if (visited.ContainsKey(node))
+            {
+                return visited[node];
+            }
+            Node cloneNode = new Node(node.val, new List<Node>());
+            visited.Add(node, cloneNode);
+            foreach (var neighbor in node.neighbors)
+            {
+                cloneNode.neighbors.Add(CloneGraph(neighbor));
+            }
+            return cloneNode;
+        }
+        public int CanCompleteCircuit(int[] gas, int[] cost)
+        {
+            int len = gas.Length;
+            int spare = 0;
+            int minSpare = int.MaxValue;
+            int minIndex = 0;
+            for (int i = 0; i < len; i++)
+            {
+                spare += gas[i] - cost[i];
+                if (spare < minSpare)
+                {
+                    minSpare = spare;
+                    minIndex = i;
+                }
+            }
+            return spare < 0 ? -1 : (minIndex + 1) % len;
         }
     }
 }
