@@ -15,6 +15,11 @@ namespace LeetCode
             this.val = val;
             this.next = next;
         }
+        public ListNode(int x)
+        {
+            val = x;
+            next = null;
+        }
     }
 
     public class Solution
@@ -4145,6 +4150,94 @@ namespace LeetCode
             }
             return dp[s.Length];
         }
-        
+        public IList<string> WordBreak1(string s, IList<string> wordDict)
+        {
+            Dictionary<int, List<List<string>>> map = new Dictionary<int, List<List<string>>>();
+            List<List<string>> wordBreaks = BackTrack(s, s.Length, new HashSet<string>(wordDict), 0, map);
+            List<string> breakList = new List<string>();
+            foreach (var wordBreak in wordBreaks)
+            {
+                breakList.Add(string.Join(" ", wordBreak));
+            }
+            return breakList;
+        }
+
+        private List<List<string>> BackTrack(string s, int length, HashSet<string> wordSet, int index, Dictionary<int, List<List<string>>> map)
+        {
+            if (!map.ContainsKey(index))
+            {
+                List<List<string>> wordBreaks = new List<List<string>>();
+                if (index == length)
+                {
+                    wordBreaks.Add(new List<string>());
+                }
+                for (int i = index + 1; i <= length; i++)
+                {
+                    string word = s.Substring(index, i - index);
+                    if (wordSet.Contains(word))
+                    {
+                        List<List<string>> nextWordBreaks = BackTrack(s, length, wordSet, i, map);
+                        foreach (var nextWordBreak in nextWordBreaks)
+                        {
+                            List<string> wordBreak = new List<string>(nextWordBreak);
+                            wordBreak.Insert(0, word);
+                            wordBreaks.Add(wordBreak);
+                        }
+                    }
+                }
+                map.Add(index, wordBreaks);
+            }
+            return map[index];
+        }
+        public bool HasCycle(ListNode head)
+        {
+            if (head == null || head.next == null)
+            {
+                return false;   
+            }
+            ListNode slow = head;
+            ListNode fast = head.next;
+            while (slow != fast)
+            {
+                if (fast == null || fast.next == null)
+                {
+                    return false;
+                }
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+            return true;
+        }
+        public ListNode DetectCycle(ListNode head)
+        {
+            if (head == null)
+            {
+                return null;
+            }
+            ListNode slow = head, fast = head;
+            while (fast != null)
+            {
+                slow = slow.next;
+                if (fast.next != null)
+                {
+                    fast = fast.next.next;
+                }
+                else
+                {
+                    return null;    
+                }
+                if (fast == slow)
+                {
+                    ListNode ptr = head;
+                    while (ptr != slow)
+                    {
+                        ptr = ptr.next;
+                        slow = slow.next;
+                    }
+                    return ptr;
+                }
+            }
+            return null;
+        }
     }
 }
