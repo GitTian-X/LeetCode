@@ -4239,5 +4239,124 @@ namespace LeetCode
             }
             return null;
         }
+        public void ReorderList(ListNode head)
+        {
+            if (head == null)
+            {
+                return;
+            }
+            ListNode mid = MiddleNode(head);
+            ListNode l1 = head;
+            ListNode l2 = mid.next;
+            mid.next = null;
+            l2 = ReverseLIst(l2);
+            MergeList(l1, l2);
+        }
+        private ListNode MiddleNode(ListNode head)
+        {
+            ListNode slow = head;
+            ListNode fast = head;
+            while (fast.next != null && fast.next.next != null)
+            {
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+            return slow;
+        }
+        private ListNode ReverseLIst(ListNode head)
+        {
+            ListNode prev = null;
+            ListNode curr = head;
+            while (curr != null)
+            {
+                ListNode nextTemp = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = nextTemp;
+            }
+            return prev;
+        }
+        private void MergeList(ListNode l1, ListNode l2)
+        {
+            ListNode l1Tmp;
+            ListNode l2Tmp;
+            while (l1 != null && l2 != null)
+            {
+                l1Tmp = l1.next;
+                l2Tmp = l2.next;
+                l1.next = l2;
+                l1 = l1Tmp;
+                l2.next = l1;
+                l2 = l2Tmp;
+            }
+        }
+        public IList<int> PreorderTraversal(TreeNode root)
+        {
+            IList<int> res = new List<int>();
+            if (root == null)
+            {
+                return res;
+            }
+            TreeNode p1 = root, p2 = null;
+            while (p1 != null)
+            {
+                p2 = p1.left;
+                if (p2 != null)
+                {
+                    while (p2.right != null && p2.right != p1)
+                    {
+                        p2 = p2.right;
+                    }
+                    if (p2.right == null)
+                    {
+                        res.Add(p1.val);
+                        p2.right = p1;
+                        p1 = p1.left;
+                        continue;
+                    }
+                    else
+                    {
+                        p2.right = null;
+                    }
+                }
+                else
+                {
+                    res.Add(p1.val);
+                }
+                p1 = p1.right;
+            }
+            return res;
+        }
+        public IList<int> PostorderTraversal(TreeNode root)
+        {
+            IList<int> res = new List<int>();
+            if (root == null)
+            {
+                return res;
+            }
+            Stack<TreeNode> stack = new Stack<TreeNode>();
+            TreeNode prev = null;
+            while (root != null || stack.Count != 0)
+            {
+                while (root != null)
+                {
+                    stack.Push(root);
+                    root = root.left;
+                }
+                root = stack.Pop();
+                if (root.right == null || root.right == prev)
+                {
+                    res.Add(root.val);
+                    prev = root;
+                    root = null;
+                }
+                else
+                {
+                    stack.Push(root);
+                    root = root.right;
+                }
+            }
+            return res;
+        }
     }
 }
