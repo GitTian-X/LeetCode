@@ -4358,5 +4358,206 @@ namespace LeetCode
             }
             return res;
         }
+        public ListNode InsertionSortList(ListNode head)
+        {
+            if (head == null)
+            {
+                return head;
+            }
+            ListNode dummyHead = new ListNode(0);
+            dummyHead.next = head;
+            ListNode lastSorted = head, curr = head.next;
+            while (curr != null)
+            {
+                if (lastSorted.val <= curr.val)
+                {
+                    lastSorted = lastSorted.next;
+                }
+                else
+                {
+                    ListNode prev = dummyHead;
+                    while (prev.next.val <= curr.val)
+                    {
+                        prev = prev.next;
+                    }
+                    lastSorted.next = curr.next;
+                    curr.next = prev.next;
+                    prev.next = curr;
+                }
+                curr = lastSorted.next;
+            }
+            return dummyHead.next;
+        }
+        public ListNode SortList(ListNode head)
+        {
+            if (head == null)
+            {
+                return head;
+            }
+            int len = 0;
+            ListNode node = head;
+            while (node != null)
+            {
+                len++;
+                node = node.next;
+            }
+            ListNode dummyHead = new ListNode(0, head);
+            for (int subLen = 1; subLen < len; subLen<<=1)
+            {
+                ListNode prev = dummyHead, curr = dummyHead.next;
+                while (curr != null)
+                {
+                    ListNode head1 = curr;
+                    for (int i = 1; i < subLen && curr.next != null; i++)
+                    {
+                        curr = curr.next;
+                    }
+                    ListNode head2 = curr.next;
+                    curr.next = null;
+                    curr = head2;
+                    for (int i = 1; i < subLen && curr != null && curr.next != null; i++)
+                    {
+                        curr = curr.next;
+                    }
+                    ListNode next = null;
+                    if (curr != null)
+                    {
+                        next = curr.next;
+                        curr.next = null;
+                    }
+                    ListNode merged = Merge(head1, head2);
+                    prev.next = merged;
+                    while (prev.next != null)
+                    {
+                        prev = prev.next; 
+                    }
+                    curr = next;
+                }
+            }
+            return dummyHead.next;
+        }
+        private ListNode Merge(ListNode head1, ListNode head2)
+        {
+            ListNode dummyHead = new ListNode(0);
+            ListNode temp = dummyHead, temp1 = head1, temp2 = head2;
+            while (temp1 != null && temp2 != null)
+            {
+                if (temp1.val <= temp2.val)
+                {
+                    temp.next = temp1;
+                    temp1 = temp1.next;
+                }
+                else
+                {
+                    temp.next = temp2;
+                    temp2 = temp2.next;
+                }
+                temp = temp.next;
+            }
+            if (temp1 != null)
+            {
+                temp.next = temp1;
+            }
+            else if(temp2 != null)
+            {
+                temp.next = temp2;
+            }
+            return dummyHead.next;
+        }
     }
+    public class LRUCache
+    {
+        public class DLinkeNode
+        {
+            public int key;
+            public int value;
+            public DLinkeNode prev;
+            public DLinkeNode next;
+            public DLinkeNode()
+            {
+
+            }
+            public DLinkeNode(int k, int val)
+            {
+                key = k;
+                value = val;
+            }
+        }
+        private Dictionary<int, DLinkeNode> cache = new Dictionary<int, DLinkeNode>();
+        private int size;
+        private int capacity;
+        private DLinkeNode head, tail;
+
+        public LRUCache(int capacity)
+        {
+            size = 0;
+            this.capacity = capacity;
+            head = new DLinkeNode();
+            tail = new DLinkeNode();
+            head.next = tail;
+            tail.prev = head;
+        }
+
+        public int Get(int key)
+        {
+            bool success = cache.TryGetValue(key, out DLinkeNode node);
+            if (!success)
+            {
+                return -1;
+            }
+            MoveToHead(node);
+            return node.value;
+        }
+
+        public void Put(int key, int value)
+        {
+            bool success = cache.TryGetValue(key, out DLinkeNode node);
+            if (!success)
+            {
+                DLinkeNode newNode = new DLinkeNode(key, value);
+                cache.Add(key, newNode);
+                AddToHead(newNode);
+                size++;
+                if (size > capacity)
+                {
+                    DLinkeNode tail = RemoveTail();
+                    cache.Remove(tail.key);
+                    size--;
+                }
+            }
+            else
+            {
+                node.value = value;
+                MoveToHead(node);
+            }
+        }
+
+        private DLinkeNode RemoveTail()
+        {
+            DLinkeNode res = tail.prev;
+            RemoveNode(res);
+            return res;
+        }
+
+        private void MoveToHead(DLinkeNode node)
+        {
+            RemoveNode(node);
+            AddToHead(node);
+        }
+
+        private void AddToHead(DLinkeNode node)
+        {
+            node.prev = head;
+            node.next = head.next;
+            head.next.prev = node;
+            head.next = node;
+        }
+
+        private void RemoveNode(DLinkeNode node)
+        {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+    }
+
 }
