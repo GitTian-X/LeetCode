@@ -4193,7 +4193,7 @@ namespace LeetCode
         {
             if (head == null || head.next == null)
             {
-                return false;   
+                return false;
             }
             ListNode slow = head;
             ListNode fast = head.next;
@@ -4224,7 +4224,7 @@ namespace LeetCode
                 }
                 else
                 {
-                    return null;    
+                    return null;
                 }
                 if (fast == slow)
                 {
@@ -4402,7 +4402,7 @@ namespace LeetCode
                 node = node.next;
             }
             ListNode dummyHead = new ListNode(0, head);
-            for (int subLen = 1; subLen < len; subLen<<=1)
+            for (int subLen = 1; subLen < len; subLen <<= 1)
             {
                 ListNode prev = dummyHead, curr = dummyHead.next;
                 while (curr != null)
@@ -4429,7 +4429,7 @@ namespace LeetCode
                     prev.next = merged;
                     while (prev.next != null)
                     {
-                        prev = prev.next; 
+                        prev = prev.next;
                     }
                     curr = next;
                 }
@@ -4458,11 +4458,133 @@ namespace LeetCode
             {
                 temp.next = temp1;
             }
-            else if(temp2 != null)
+            else if (temp2 != null)
             {
                 temp.next = temp2;
             }
             return dummyHead.next;
+        }
+        public int MaxPoints(int[][] points)
+        {
+            if (points.Length < 3)
+            {
+                return points.Length;
+            }
+            int maxCount = 1;
+            for (int i = 0; i < points.Length - 1; i++)
+            {
+                maxCount = Math.Max(ComputeMaxPoints(points, i), maxCount);
+            }
+            return maxCount;
+        }
+        private int horizontalLines;
+        private Dictionary<string, int> linePointsDictionary = new Dictionary<string, int>();
+        private int count;
+        private int duplicates;
+        private int ComputeMaxPoints(int[][] points, int i)
+        {
+            ClearStatisticData();
+            for (int j = i + 1; j < points.Length; j++)
+            {
+                Statistic(points, i, j);
+            }
+            return count + duplicates;
+        }
+
+        private void Statistic(int[][] points, int i, int j)
+        {
+            int x1 = points[i][0], y1 = points[i][1];
+            int x2 = points[j][0], y2 = points[j][1];
+            if (x1 == x2 && y1 == y2)
+            {
+                duplicates++;
+            }
+            else if (y1 == y2)
+            {
+                horizontalLines++;
+                count = Math.Max(horizontalLines, count);
+            }
+            else
+            {
+                string slope = BuildSlope(x1 - x2, y1 - y2);
+                if (!linePointsDictionary.TryAdd(slope, 2))
+                {
+                    linePointsDictionary[slope]++;
+                }
+                count = Math.Max(linePointsDictionary[slope], count);
+            }
+        }
+
+        private string BuildSlope(int v1, int v2)
+        {
+            int gcd = ComputeGcd(v1, v2);
+            return v1 / gcd + "_" + v2 / gcd;
+        }
+
+        private int ComputeGcd(int v1, int v2)
+        {
+            if (v2 == 0)
+            {
+                return v1;
+            }
+            int r = v1 % v2;
+            return ComputeGcd(v2, r);
+        }
+
+        private void ClearStatisticData()
+        {
+            linePointsDictionary.Clear();
+            horizontalLines = 1;
+            count = 1;
+            duplicates = 0;
+        }
+        public int EvalRPN(string[] tokens)
+        {
+            Stack<int> stack = new Stack<int>();
+            foreach (var token in tokens)
+            {
+                if (token == "+" || token == "-" || token == "*" || token == "/")
+                {
+                    int num1 = stack.Pop();
+                    int num2 = stack.Pop();
+                    switch (token)
+                    {
+                        case "+":
+                            stack.Push(num2 + num1);
+                            break;
+                        case "-":
+                            stack.Push(num2 - num1);
+                            break;
+                        case "*":
+                            stack.Push(num2 * num1);
+                            break;
+                        case "/":
+                            stack.Push(num2 / num1);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    stack.Push(int.Parse(token));
+                }
+            }
+            return stack.Pop();
+        }
+        public string ReverseWords(string s)
+        {
+            string[] res = s.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            StringBuilder sb = new StringBuilder();
+            for (int i = res.Length - 1; i >= 0; i--)
+            {
+                sb.Append(res[i]);
+                if (i != 0)
+                {
+                    sb.Append(" ");
+                }
+            }
+            return sb.ToString();
         }
     }
     public class LRUCache
