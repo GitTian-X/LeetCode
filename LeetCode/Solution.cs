@@ -4586,6 +4586,57 @@ namespace LeetCode
             }
             return sb.ToString();
         }
+        public int MaxProduct(int[] nums)
+        {
+            int maxF = nums[0], minF = nums[0], ans = nums[0];
+            int len = nums.Length;
+            for (int i = 1; i < len; i++)
+            {
+                int mx = maxF, mn = minF;
+                maxF = Math.Max(mx * nums[i], Math.Max(nums[i], mn * nums[i]));
+                minF = Math.Min(mn * nums[i], Math.Min(nums[i], mx * nums[i]));
+                ans = Math.Max(maxF, ans);
+            }
+            return ans;
+        }
+        public int FindMin(int[] nums)
+        {
+            int left = 0, right = nums.Length - 1;
+            while (left < right)
+            {
+                int middle = (left + right) / 2;
+                if (nums[middle] < nums[right])
+                {
+                    right = middle;
+                }
+                else
+                {
+                    left = middle + 1;
+                }
+            }
+            return nums[left];
+        }
+        public int FindMin1(int[] nums)
+        {
+            int left = 0, right = nums.Length - 1;
+            while (left < right)
+            {
+                int middle = left + (right - left) / 2;
+                if (nums[middle] < nums[right])
+                {
+                    right = middle;
+                }
+                else if (nums[middle] > nums[right])
+                {
+                    left = middle + 1;
+                }
+                else
+                {
+                    right--;
+                }
+            }
+            return nums[left];
+        }
     }
     public class LRUCache
     {
