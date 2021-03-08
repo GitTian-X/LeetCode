@@ -4637,6 +4637,39 @@ namespace LeetCode
             }
             return nums[left];
         }
+        public ListNode GetIntersectionNode(ListNode headA, ListNode headB)
+        {
+            if (headA == null || headB == null)
+            {
+                return null;
+            }
+            ListNode p1 = headA;
+            ListNode p2 = headB;
+            while (p1 != p2)
+            {
+                p1 = p1 == null ? headB : p1.next;
+                p2 = p2 == null ? headA : p2.next;
+            }
+            return p1;
+        }
+        public int FindPeakElement(int[] nums)
+        {
+            return SearchPeak(nums, 0, nums.Length - 1);
+        }
+
+        private int SearchPeak(int[] nums, int l, int r)
+        {
+            if (l == r)
+            {
+                return l;
+            }
+            int mid = (l + r) / 2;
+            if (nums[mid] > nums[mid + 1])
+            {
+                return SearchPeak(nums, l, mid);
+            }
+            return SearchPeak(nums, mid + 1, r);
+        }
     }
     public class LRUCache
     {
@@ -4732,5 +4765,40 @@ namespace LeetCode
             node.next.prev = node.prev;
         }
     }
+    public class MinStack
+    {
+        Stack<int[]> myStack;
+        /** initialize your data structure here. */
+        public MinStack()
+        {
+            myStack = new Stack<int[]>();
+        }
 
+        public void Push(int x)
+        {
+            if (myStack.Count == 0)
+            {
+                myStack.Push(new int[] { x, x});
+            }
+            else
+            {
+                myStack.Push(new int[] { x, Math.Min(x, myStack.Peek()[1]) });
+            }
+        }
+
+        public void Pop()
+        {
+            myStack.Pop();
+        }
+
+        public int Top()
+        {
+            return myStack.Peek()[0];
+        }
+
+        public int GetMin()
+        {
+            return myStack.Peek()[1];
+        }
+    }
 }
