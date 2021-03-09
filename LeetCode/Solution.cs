@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -4669,6 +4670,124 @@ namespace LeetCode
                 return SearchPeak(nums, l, mid);
             }
             return SearchPeak(nums, mid + 1, r);
+        }
+        public int MaximumGap(int[] nums)
+        {
+            int len = nums.Length;
+            if (len < 2)
+            {
+                return 0;
+            }
+            long exp = 1;
+            int[] buf = new int[len];
+            int maxVal = nums.Max();
+            while (maxVal >= exp)
+            {
+                int[] cnt = new int[10];
+                for (int i = 0; i < len; i++)
+                {
+                    int digit = (nums[i] / (int)exp) % 10;
+                    cnt[digit]++;
+                }
+                for (int i = 1; i < 10; i++)
+                {
+                    cnt[i] += cnt[i - 1];
+                }
+                for (int i = len - 1; i >= 0; i--)
+                {
+                    int digit = (nums[i] / (int)exp) % 10;
+                    buf[cnt[digit] - 1] = nums[i];
+                    cnt[digit]--;
+                }
+                Array.Copy(buf, 0, nums, 0, len);
+                exp *= 10;
+            }
+            int res = 0;
+            for (int i = 0; i < nums.Length - 1; i++)
+            {
+                res = Math.Max(nums[i + 1] - nums[i], res);
+            }
+            return res;
+        }
+        public int CompareVersion(string version1, string version2)
+        {
+            int p1 = 0, p2 = 0;
+            int n1 = version1.Length, n2 = version2.Length;
+            int i1, i2;
+            KeyValuePair<int, int> pair;
+            while (p1 < n1 || p2 < n2)
+            {
+                pair = GetNextChunk(version1, n1, p1);
+                i1 = pair.Key;
+                p1 = pair.Value;
+                pair = GetNextChunk(version2, n2, p2);
+                i2 = pair.Key;
+                p2 = pair.Value;
+                if (i1 != i2)
+                {
+                    return i1 > i2 ? 1 : -1;
+                }
+            }
+            return 0;
+        }
+
+        private KeyValuePair<int, int> GetNextChunk(string version1, int n1, int p1)
+        {
+            if (p1 > n1 - 1)
+            {
+                return new KeyValuePair<int, int>(0, p1);
+            }
+            int i, pEnd = p1;
+            while (pEnd < n1 && version1[pEnd] != '.')
+            {
+                pEnd++;
+            }
+            if (pEnd != n1 - 1)
+            {
+                i = int.Parse(version1.Substring(p1, pEnd - p1));
+            }
+            else
+            {
+                i = int.Parse(version1.Substring(p1, p1 - n1));
+            }
+            p1 = pEnd + 1;
+            return new KeyValuePair<int, int>(i, p1);
+        }
+        public string FractionToDecimal(int numerator, int denominator)
+        {
+            if (numerator == 0)
+            {
+                return "0";
+            }
+            StringBuilder sb = new StringBuilder();
+            if (numerator < 0 ^ denominator < 0)
+            {
+                sb.Append("-");
+            }
+            long dividend = Math.Abs((long)numerator);
+            long divisor = Math.Abs((long)denominator);
+            sb.Append(dividend / divisor);
+            long reminder = dividend % divisor;
+            if (reminder == 0)
+            {
+                return sb.ToString();
+            }
+            sb.Append(".");
+            Dictionary<long, int> map = new Dictionary<long, int>();
+            while (reminder != 0)
+            {
+                if (map.ContainsKey(reminder))
+                {
+                    sb.Insert(map[reminder], "(");
+                    sb.Append(")");
+                    break;
+                }
+                map.Add(reminder, sb.Length);
+                reminder *= 10;
+                sb.Append(reminder / divisor);
+                reminder %= divisor;
+            }
+            return sb.ToString();
         }
     }
     public class LRUCache
