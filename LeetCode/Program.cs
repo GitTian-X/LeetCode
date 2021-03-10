@@ -11,7 +11,7 @@ namespace LeetCode
             ListNode l1 = new ListNode(1);
             l1.next = new ListNode(1);
             l1.next.next = new ListNode(2);
-            Console.WriteLine(solution.Partition("aab"));
+            Console.WriteLine(solution.ConvertToTitle(52));
         }
     }
 }

@@ -4789,6 +4789,71 @@ namespace LeetCode
             }
             return sb.ToString();
         }
+        public int[] TwoSum1(int[] numbers, int target)
+        {
+            int left = 0, right = numbers.Length - 1;
+            while (left < right)
+            {
+                if (numbers[left] + numbers[right] < target)
+                {
+                    left++;
+                }
+                else if (numbers[left] + numbers[right] > target)
+                {
+                    right--;
+                }
+                else
+                {
+                    return new int[] { left + 1, right + 1 };
+                }
+            }
+            return null;
+        }
+        public string ConvertToTitle(int columnNumber)
+        {
+            StringBuilder sb = new StringBuilder();
+            while (columnNumber != 0)
+            {
+                columnNumber--;
+                sb.Insert(0, (char)('A' + columnNumber % 26));
+                columnNumber /= 26;
+            }
+            return sb.ToString();
+        }
+        public int MajorityElement(int[] nums)
+        {
+            int count = 0;
+            int candidate = 0;
+            foreach (var num in nums)
+            {
+                if (count == 0)
+                {
+                    candidate = num;
+                }
+                count += (num == candidate ? 1 : -1);
+            }
+            return candidate;
+        }
+        public int TitleToNumber(string columnTitle)
+        {
+            int res = 0;
+            for (int i = 0; i < columnTitle.Length; i++)
+            {
+                res *= 26;
+                res += columnTitle[i] - 'A' + 1;
+            }
+            return res;
+        }
+        public int TrailingZeroes(int n)
+        {
+            int count = 0;
+            while (n > 0)
+            {
+                count += n / 5;
+                n /= 5;
+            }
+            return count;
+        }
     }
     public class LRUCache
     {
