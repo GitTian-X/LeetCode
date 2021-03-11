@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using static LeetCode.Solution;
 
 namespace LeetCode
 {
@@ -4854,6 +4855,62 @@ namespace LeetCode
             }
             return count;
         }
+        public int CalculateMinimumHP(int[][] dungeon)
+        {
+            int row = dungeon.Length;
+            int height = dungeon[0].Length;
+            int[][] dp = new int[row + 1][];
+            for (int i = 0; i <= row; i++)
+            {
+                dp[i] = new int[height + 1];
+                Array.Fill(dp[i], int.MaxValue);
+            }
+            dp[row][height - 1] = dp[row - 1][height] = 1;
+            for (int i = row - 1; i >= 0; i--)
+            {
+                for (int j = height - 1; j >= 0; j--)
+                {
+                    int min = Math.Min(dp[i + 1][j], dp[i][j + 1]);
+                    dp[i][j] = Math.Max(min - dungeon[i][j], 1);
+                }
+            }
+            return dp[0][0];
+        }
+    }
+    #region SQL
+    //175SQL: select FirstName,LastName,City,State from Person left join Address on Person.PersonId = Address.PersonId;
+    //176SQL: select ifnull ((select distinct Salary from Employee order by Salary desc limit 1 offset 1), null) as SecondHighestSalary;
+    #endregion
+    public class BSTIterator
+    {
+        Stack<TreeNode> stack;
+        public BSTIterator(TreeNode root)
+        {
+            stack = new Stack<TreeNode>();
+            LeftMin(root);
+        }
+        private void LeftMin(TreeNode root)
+        {
+            while (root != null)
+            {
+                stack.Push(root);
+                root = root.left;
+            }
+        }
+        public int Next()
+        {
+            TreeNode tmp = stack.Pop();
+            if (tmp.right != null)
+            {
+                LeftMin(tmp.right);
+            }
+            return tmp.val;
+        }
+
+        public bool HasNext()
+        {
+            return stack.Count > 0;
+        }
     }
     public class LRUCache
     {
@@ -4962,7 +5019,7 @@ namespace LeetCode
         {
             if (myStack.Count == 0)
             {
-                myStack.Push(new int[] { x, x});
+                myStack.Push(new int[] { x, x });
             }
             else
             {
