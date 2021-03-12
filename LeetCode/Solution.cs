@@ -4876,11 +4876,121 @@ namespace LeetCode
             }
             return dp[0][0];
         }
+        class LargerNumberComparator : IComparer<string>
+        {
+            public int Compare(string x, string y)
+            {
+                string s1 = x + y;
+                string s2 = y + x;
+                return s2.CompareTo(s1);
+            }
+        }
+        public string LargestNumber(int[] nums)
+        {
+            string[] strNums = new string[nums.Length];
+            for (int i = 0; i < nums.Length; i++)
+            {
+                strNums[i] = nums[i].ToString();
+            }
+            Array.Sort(strNums, new LargerNumberComparator());
+            if (strNums[0].Equals("0"))
+            {
+                return "0";
+            }
+            string ans = "";
+            foreach (var s in strNums)
+            {
+                ans += s;
+            }
+            return ans;
+        }
+        public IList<string> FindRepeatedDnaSequences(string s)
+        {
+            int L = 10, n = s.Length;
+            if (n <= L)
+            {
+                return new List<string>();
+            }
+            int a = 4, aL = (int)Math.Pow(a, L);
+            Dictionary<char, int> toInt = new Dictionary<char, int>() { { 'A', 0 }, { 'C', 1 }, { 'G', 2 }, { 'T', 3 } };
+            int[] nums = new int[n];
+            for (int i = 0; i < n; i++)
+            {
+                nums[i] = toInt[s[i]];
+            }
+            int h = 0;
+            HashSet<int> seen = new HashSet<int>();
+            HashSet<string> output = new HashSet<string>();
+            for (int start = 0; start < n - L + 1; start++)
+            {
+                if (start != 0)
+                {
+                    h = h * a - nums[start - 1] * aL + nums[start + L - 1];
+                }
+                else
+                {
+                    for (int i = 0; i < L; i++)
+                    {
+                        h = h * a + nums[i];
+                    }
+                }
+                if (seen.Contains(h))
+                {
+                    output.Add(s.Substring(start, L));
+                }
+                seen.Add(h);
+            }
+            return new List<string>(output);
+        }
+        public int MaxProfit(int k, int[] prices)
+        {
+            if (prices.Length == 0)
+            {
+                return 0;
+            }
+            int len = prices.Length;
+            int left = 1, right = prices.Max();
+            int ans = -1;
+            while (left <= right)
+            {
+                int c = (left + right) / 2;
+                int buyCount = 0, sellCount = 0;
+                int buy = -prices[0], sell = 0;
+                for (int i = 0; i < len; i++)
+                {
+                    if (sell - prices[i] >= buy)
+                    {
+                        buy = sell - prices[i];
+                        buyCount = sellCount;
+                    }
+                    if (buy + prices[i] - c >= sell)
+                    {
+                        sell = buy + prices[i] - c;
+                        sellCount = buyCount + 1;
+                    }
+                }
+                if (sellCount >= k)
+                {
+                    ans = sell + k * c;
+                    left = c + 1;
+                }
+                else
+                {
+                    right = c - 1;
+                }
+            }
+            if (ans == -1)
+            {
+                ans = 0;
+                for (int i = 1; i < len; i++)
+                {
+                    ans += Math.Max(prices[i] - prices[i - 1], 0);
+                }
+            }
+            return ans;
+        }
     }
-    #region SQL
-    //175SQL: select FirstName,LastName,City,State from Person left join Address on Person.PersonId = Address.PersonId;
-    //176SQL: select ifnull ((select distinct Salary from Employee order by Salary desc limit 1 offset 1), null) as SecondHighestSalary;
-    #endregion
+
     public class BSTIterator
     {
         Stack<TreeNode> stack;
