@@ -4989,6 +4989,63 @@ namespace LeetCode
             }
             return ans;
         }
+        public void Rotate(int[] nums, int k)
+        {
+            k %= nums.Length;
+            Reverse(nums, 0, nums.Length - 1);
+            Reverse(nums, 0, k - 1);
+            Reverse(nums, k, nums.Length - 1);
+        }
+        private void Reverse(int[] nums, int start, int end)
+        {
+            while (start < end)
+            {
+                int tmp = nums[start];
+                nums[start] = nums[end];
+                nums[end] = tmp;
+                start++;
+                end--;
+            }
+        }
+        public uint ReverseBits(uint n)
+        {
+            n = (n >> 16) | (n << 16);
+            n = ((n & 0xff00ff00) >> 8) | ((n & 0x00ff00ff) << 8);
+            n = ((n & 0xf0f0f0f0) >> 4) | ((n & 0x0f0f0f0f) << 4);
+            n = ((n & 0xcccccccc) >> 2) | ((n & 0x33333333) << 2);
+            n = ((n & 0xaaaaaaaa) >> 1) | ((n & 0x55555555) << 1);
+            return n;
+        }
+        public int HammingWeight(uint n)
+        {
+            int sum = 0;
+            while (n != 0)
+            {
+                sum++;
+                n &= (n - 1);
+            }
+            return sum;
+        }
+        public int Rob(int[] nums)
+        {
+            if (nums == null || nums.Length == 0)
+            {
+                return 0;
+            }
+            int len = nums.Length;
+            if (len == 1)
+            {
+                return nums[0]; 
+            }
+            int first = nums[0], second = Math.Max(nums[0], nums[1]);
+            for (int i = 2; i < len; i++)
+            {
+                int temp = second;
+                second = Math.Max(first + nums[i], second);
+                first = temp;
+            }
+            return second;
+        }
     }
 
     public class BSTIterator
