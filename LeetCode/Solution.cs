@@ -5046,6 +5046,68 @@ namespace LeetCode
             }
             return second;
         }
+        public IList<int> RightSideView(TreeNode root)
+        {
+            List<int> ans = new List<int>();
+            DFS(root, ans, 0);
+            return ans;
+        }
+
+        private void DFS(TreeNode root, List<int> ans, int depth)
+        {
+            if (root == null)
+            {
+                return;
+            }
+            if (depth == ans.Count)
+            {
+                ans.Add(root.val);
+            }
+            depth++;
+            DFS(root.right, ans, depth);
+            DFS(root.left, ans, depth);
+        }
+        public int NumIslands(char[][] grid)
+        {
+            int count = 0;
+            for (int i = 0; i < grid.Length; i++)
+            {
+                for (int j = 0; j < grid[0].Length; j++)
+                {
+                    if (grid[i][j] == '1')
+                    {
+                        DFS1(grid, i, j);
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        private void DFS1(char[][] grid, int i, int j)
+        {
+            if (i < 0 || j < 0 || i >= grid.Length || j >= grid[0].Length || grid[i][j] == '0')
+            {
+                return;
+            }
+            grid[i][j] = '0';
+            DFS1(grid, i + 1, j);
+            DFS1(grid, i, j + 1);
+            DFS1(grid, i - 1, j);
+            DFS1(grid, i, j - 1);
+        }
+        public int RangeBitwiseAnd(int left, int right)
+        {
+            int shift = 0;
+            // 找到公共前缀
+            while (left < right)
+            {
+                left >>= 1;
+                right >>= 1;
+                ++shift;
+            }
+            return left << shift;
+        }
     }
 
     public class BSTIterator
