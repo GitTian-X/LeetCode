@@ -5108,6 +5108,115 @@ namespace LeetCode
             }
             return left << shift;
         }
+        private HashSet<int> CycleNumbers = new HashSet<int>() { 4, 16, 37, 58, 89, 145, 42, 20, 4 };
+        private int GetNext(int n)
+        {
+            int totalSum = 0;
+            while (n > 0)
+            {
+                int d = n % 10;
+                n /= 10;
+                totalSum += d * d;
+            }
+            return totalSum;
+        }
+        public bool IsHappy(int n)
+        {
+            while (n != 1 && !CycleNumbers.Contains(n))
+            {
+                n = GetNext(n);
+            }
+            return n == 1;
+        }
+        public ListNode RemoveElements(ListNode head, int val)
+        {
+            ListNode newHead = new ListNode(0);
+            ListNode previousNode = newHead;
+            ListNode currentNode = head;
+
+            while (currentNode != null)
+            {
+                if (currentNode.val != val)
+                {
+                    previousNode.next = currentNode;
+                    previousNode = currentNode;
+                }
+                currentNode = currentNode.next;
+            }
+            //特别注意不能少了这行
+            currentNode.next = null;
+            return newHead.next;
+        }
+        public int CountPrimes(int n)
+        {
+            List<int> primes = new List<int>();
+            int[] isPrime = new int[n];
+            Array.Fill(isPrime, 1);
+            for (int i = 2; i < n; i++)
+            {
+                if (isPrime[i] == 1)
+                {
+                    primes.Add(i);
+                }
+                for (int j = 0; j < primes.Count && i * primes[j] < n; j++)
+                {
+                    isPrime[i * primes[j]] = 0;
+                    if (i % primes[j] == 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            return primes.Count;
+        }
+        public bool IsIsomorphic(string s, string t)
+        {
+            if (s.Length != t.Length)
+            {
+                return false;
+            }
+            Dictionary<char, char> dic1 = new Dictionary<char, char>();
+            Dictionary<char, char> dic2 = new Dictionary<char, char>();
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (dic1.ContainsKey(s[i]))
+                {
+                    if (dic1[s[i]] != t[i])
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    dic1.Add(s[i], t[i]);
+                }
+                if (dic2.ContainsKey(t[i]))
+                {
+                    if (dic2[t[i]] != s[i])
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    dic2.Add(t[i], s[i]);
+                }
+            }
+            return true;
+        }
+        public ListNode ReverseList(ListNode head)
+        {
+            ListNode prev = null;
+            ListNode curr = head;
+            while (curr != null)
+            {
+                ListNode next = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = next;
+            }
+            return prev;
+        }
     }
 
     public class BSTIterator
