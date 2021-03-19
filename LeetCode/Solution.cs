@@ -5217,8 +5217,125 @@ namespace LeetCode
             }
             return prev;
         }
-    }
+        bool valid207 = true;
+        public bool CanFinish(int numCourses, int[][] prerequisites)
+        {
+            List<List<int>> edges = new List<List<int>>();
+            int[] visited = new int[numCourses];
+            for (int i = 0; i < numCourses; i++)
+            {
+                edges.Add(new List<int>());
+            }
+            foreach (var info in prerequisites)
+            {
+                edges[info[1]].Add(info[0]);
+            }
+            for (int i = 0; i < numCourses && valid207; i++)
+            {
+                if (visited[i] == 0)
+                {
+                    DFS(i, visited, edges);
+                }
+            }
+            return valid207;
+        }
 
+        private void DFS(int i, int[] visited, List<List<int>> edges)
+        {
+            visited[i] = 1;
+            foreach (var num in edges[i])
+            {
+                if (visited[num] == 0)
+                {
+                    DFS(num, visited, edges);
+                    if (!valid207)
+                    {
+                        return;
+                    }
+                }
+                else if (visited[num] == 1)
+                {
+                    valid207 = false;
+                    return;
+                }
+            }
+            visited[i] = 2;
+        }
+    }
+    public class Trie
+    {
+        private bool isEnd;
+        private Trie[] Nodes = new Trie[26];
+        /** Initialize your data structure here. */
+        public Trie()
+        {
+
+        }
+
+        /** Inserts a word into the trie. */
+        public void Insert(string word)
+        {
+            Trie node = this;
+            foreach (var a in word)
+            {
+                if (node.Nodes[a - 'a'] == null)
+                {
+                    node.Nodes[a - 'a'] = new Trie();
+                }
+                node = node.Nodes[a - 'a'];
+            }
+            node.isEnd = true;
+        }
+
+        /** Returns if the word is in the trie. */
+        public bool Search(string word)
+        {
+            Trie node = this;
+            foreach (var a in word)
+            {
+                node = node.Nodes[a - 'a'];
+                if (node == null)
+                    return false;
+            }
+            return node.isEnd;
+        }
+
+        /** Returns if there is any word in the trie that starts with the given prefix. */
+        public bool StartsWith(string prefix)
+        {
+            Trie node = this;
+            foreach (var a in prefix)
+            {
+                node = node.Nodes[a - 'a'];
+                if (node == null)
+                    return false;
+            }
+            return true;
+        }
+        public int MinSubArrayLen(int target, int[] nums)
+        {
+            int len = nums.Length;
+            if (len == 0)
+            {
+                return 0;
+            }
+            int ans = int.MaxValue;
+            int start = 0, end = 0;
+            int sum = 0;
+            while (end < len)
+            {
+                sum += nums[end];
+                while (sum >= target)
+                {
+                    ans = Math.Min(ans, end - start + 1);
+                    sum -= nums[start];
+                    start++;
+                }
+                end++;
+            }
+            return ans == int.MaxValue ? 0 : ans;
+        }
+    }
     public class BSTIterator
     {
         Stack<TreeNode> stack;
