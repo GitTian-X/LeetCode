@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.RegularExpressions;
 using static LeetCode.Solution;
 
 namespace LeetCode
@@ -5260,6 +5261,199 @@ namespace LeetCode
                 }
             }
             visited[i] = 2;
+        }
+        bool valid210 = true;
+        int index210;
+        public int[] FindOrder(int numCourses, int[][] prerequisites)
+        {
+            List<List<int>> edges = new List<List<int>>();
+            for (int i = 0; i < numCourses; i++)
+            {
+                edges.Add(new List<int>());
+            }
+            int[] visited = new int[numCourses];
+            int[] result = new int[numCourses];
+            index210 = numCourses - 1;
+            foreach (var info in prerequisites)
+            {
+                edges[info[1]].Add(info[0]);
+            }
+            for (int i = 0; i < numCourses && valid; i++)
+            {
+                if (visited[i] == 0)
+                {
+                    DFS(i, edges, visited, result);
+                }
+            }
+            if (!valid210)
+            {
+                return new int[0];
+            }
+            return result;
+        }
+
+        private void DFS(int i, List<List<int>> edges, int[] visited, int[] result)
+        {
+            visited[i] = 1;
+            foreach (var num in edges[i])
+            {
+                if (visited[num] == 0)
+                {
+                    DFS(num, edges, visited, result);
+                    if (!valid210)
+                    {
+                        return;
+                    }
+                }
+                else if (visited[num] == 1)
+                {
+                    valid210 = false;
+                    return;
+                }
+            }
+            visited[i] = 2;
+            result[index210--] = i;
+        }
+        class TrieNode
+        {
+            public Dictionary<char, TrieNode> Children { get; set; } = new Dictionary<char, TrieNode>();
+            public string Word { get; set; }
+            public TrieNode()
+            {
+
+            }
+        }
+        char[][] board212 = null;
+        List<string> result212 = new List<string>();
+        public IList<string> FindWords(char[][] board, string[] words)
+        {
+            TrieNode root = new TrieNode();
+            foreach (var word in words)
+            {
+                TrieNode node = root;
+                foreach (var letter in word.ToCharArray())
+                {
+                    if (node.Children.ContainsKey(letter))
+                    {
+                        node = node.Children[letter];
+                    }
+                    else
+                    {
+                        TrieNode newNode = new TrieNode();
+                        node.Children.Add(letter, newNode);
+                        node = newNode;
+                    }
+                }
+                node.Word = word;
+            }
+            board212 = board;
+            for (int row = 0; row < board.Length; row++)
+            {
+                for (int col = 0; col < board[row].Length; col++)
+                {
+                    if (root.Children.ContainsKey(board[row][col]))
+                    {
+                        BackTracking(row, col, root);
+                    }
+                }
+            }
+            return result212;
+        }
+
+        private void BackTracking(int row, int col, TrieNode root)
+        {
+            char letter = board212[row][col];
+            TrieNode currNode = root.Children[letter];
+            if (currNode.Word != null)
+            {
+                result212.Add(currNode.Word);
+                currNode.Word = null;
+            }
+            board212[row][col] = '#';
+            int[] rowOffset = { -1, 0, 1, 0 };
+            int[] colOffset = { 0, 1, 0, -1 };
+            for (int i = 0; i < 4; i++)
+            {
+                int newRow = row + rowOffset[i];
+                int newCol = col + colOffset[i];
+                if (newRow < 0 || newRow >= board212.Length ||
+                    newCol < 0 || newCol >= board212[0].Length)
+                {
+                    continue;
+                }
+                if (currNode.Children.ContainsKey(board212[newRow][newCol]))
+                {
+                    BackTracking(newRow, newCol, currNode);
+                }
+            }
+            board212[row][col] = letter;
+            if (currNode.Children.Count == 0)
+            {
+                root.Children.Remove(letter);
+            }
+        }
+    }
+    public class WordDictionary
+    {
+        Dictionary<int, List<string>> maps;
+        /** Initialize your data structure here. */
+        public WordDictionary()
+        {
+            maps = new Dictionary<int, List<string>>();
+        }
+
+        public void AddWord(string word)
+        {
+            int key = word.Length;
+            if (maps.ContainsKey(key))
+            {
+                maps[key].Add(word);
+            }
+            else
+            {
+                maps.Add(key, new List<string>() { word});
+            }
+        }
+
+        public bool Search(string word)
+        {
+            int key = word.Length;
+            if (!maps.ContainsKey(key))
+            {
+                return false;
+            }
+            List<string> temp = maps[key];
+            bool flag = true;
+            foreach (var str in temp)
+            {
+                flag = true;
+                for (int i = 0; i < str.Length; i++)
+                {
+                    char w = word[i];
+                    if (w == '.')
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        char s = str[i];
+                        if (w == s)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+                if (flag)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
     public class Trie
