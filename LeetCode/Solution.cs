@@ -27,27 +27,6 @@ namespace LeetCode
 
     public class Solution
     {
-        public int[] TwoSum(int[] nums, int target)
-        {
-            if (nums == null || nums.Length < 2)
-            {
-                return nums;
-            }
-            Dictionary<int, int> dic = new Dictionary<int, int>();
-            for (int i = 0; i < nums.Length; i++)
-            {
-                if (dic.ContainsKey(target - nums[i]))
-                {
-                    return new int[] { dic[target - nums[i]], i };
-                }
-                if (!dic.ContainsKey(nums[i]))
-                {
-                    dic.Add(nums[i], i);
-                }
-            }
-            return null;
-        }
-
         public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
         {
             if (l1 == null && l2 != null)
