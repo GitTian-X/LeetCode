@@ -11,18 +11,17 @@ namespace LeetCode.Q1_Q100
          */
         public int[] TwoSum(int[] nums, int target)
         {
-            int tempTarget = -1;
             Dictionary<int, int> map = new Dictionary<int, int>();
             for (int i = 0; i < nums.Length; i++)
             {
-                if (map.TryGetValue(nums[i], out int index))
+                int remaining = target - nums[i];
+                if (!map.ContainsKey(remaining))
                 {
-                    return new int[] { index, i };
+                    map.Add(nums[i], i);
                 }
                 else
                 {
-                    tempTarget = target - nums[i];
-                    map.Add(tempTarget, i);
+                    return new int[] { map[remaining], i };
                 }
             }
             return null;
