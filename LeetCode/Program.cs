@@ -8,8 +8,8 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            Q3 q3 = new Q3();
-            Console.WriteLine(q3.LengthOfLongestSubstring("aab"));
+            Q4 q = new Q4();
+            Console.WriteLine(q.FindMedianSortedArrays(new int[] { 1, 2}, new int[] { 3,4}));
         }
     }
 }
