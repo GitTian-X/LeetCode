@@ -27,43 +27,6 @@ namespace LeetCode
 
     public class Solution
     {
-        public int LengthOfLongestSubstring(string s)
-        {
-            if (string.IsNullOrEmpty(s))
-            {
-                return 0;
-            }
-            if (s.Trim().Length == 0)
-            {
-                return 1;
-            }
-            int maxLength = 0;
-            int startIndex = 0;
-            Dictionary<char, int> dic = new Dictionary<char, int>();
-            char[] charArray = s.ToCharArray();
-            for (int i = 0; i < charArray.Length; i++)
-            {
-                if (dic.ContainsKey(charArray[i]))
-                {
-                    if (dic[charArray[i]] < startIndex)
-                    {
-                        maxLength = Math.Max(maxLength, i - startIndex + 1);
-                    }
-                    else
-                    {
-                        startIndex = dic[charArray[i]] + 1;
-                    }
-                    dic[charArray[i]] = i;
-                }
-                else
-                {
-                    dic.Add(charArray[i], i);
-                    maxLength = Math.Max(maxLength, i - startIndex + 1);
-                }
-            }
-            return maxLength;
-        }
-
         public double FindMedianSortedArrays(int[] nums1, int[] nums2)
         {
             if (nums1.Length > nums2.Length)
