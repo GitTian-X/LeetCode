@@ -8,8 +8,8 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            Q4 q = new Q4();
-            Console.WriteLine(q.FindMedianSortedArrays(new int[] { 1, 2}, new int[] { 3,4}));
+            Q8 q = new Q8();
+            Console.WriteLine(q.MyAtoi("42"));
         }
     }
 }

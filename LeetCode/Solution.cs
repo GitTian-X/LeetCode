@@ -27,61 +27,6 @@ namespace LeetCode
 
     public class Solution
     {
-        public int MyAtoi(string s)
-        {
-            if (string.IsNullOrWhiteSpace(s))
-            {
-                return 0;
-            }
-            s = s.Trim();
-            char[] charArray = s.ToCharArray();
-            if (charArray[0] != '-' && charArray[0] < '0' && charArray[0] > '9')
-            {
-                return 0;
-            }
-            int startIndex = 0;
-            int symbol = 1;
-            if (charArray[0] == '-' || charArray[0] == '+')
-            {
-                startIndex = 1;
-                symbol = charArray[0] == '-' ? -1 : 1;
-            }
-            int res = 0;
-            for (; startIndex < charArray.Length; startIndex++)
-            {
-                if (charArray[startIndex] >= '0' && charArray[startIndex] <= '9')
-                {
-                    if (res * symbol > int.MaxValue / 10 || (res * symbol == int.MaxValue / 10 && charArray[startIndex] - '0' > 7))
-                    {
-                        return int.MaxValue;
-                    }
-                    if (res * symbol < int.MinValue / 10 || (res * symbol == int.MinValue / 10 && charArray[startIndex] - '0' > 8))
-                    {
-                        return int.MinValue;
-                    }
-                    res = res * 10 + (charArray[startIndex] - '0');
-                }
-                else
-                    break;
-            }
-            return res * symbol;
-        }
-
-        public bool IsPalindrome(int x)
-        {
-            if (x < 0 || (x % 10 == 0 && x != 0))
-            {
-                return false;
-            }
-            int reverseNumber = 0;
-            while (x > reverseNumber)
-            {
-                reverseNumber = reverseNumber * 10 + x % 10;
-                x /= 10;
-            }
-            return reverseNumber == x || x == reverseNumber / 10;
-        }
-
         public bool IsMatch(string s, string p)
         {
             char[] charArrayS = s.ToCharArray();
