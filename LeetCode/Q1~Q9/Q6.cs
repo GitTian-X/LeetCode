@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
-namespace LeetCode.Q1_Q100
+namespace LeetCode.Q1_Q9
 {
     class Q6
     {

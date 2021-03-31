@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LeetCode.Q1_Q100
+﻿namespace LeetCode.Q1_Q9
 {
     public class ListNode
     {

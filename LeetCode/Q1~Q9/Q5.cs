@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace LeetCode.Q1_Q100
+namespace LeetCode.Q1_Q9
 {
     class Q5
     {

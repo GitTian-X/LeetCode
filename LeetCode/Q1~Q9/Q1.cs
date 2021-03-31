@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LeetCode.Q1_Q100
+namespace LeetCode.Q1_Q9
 {
     class Q1
     {

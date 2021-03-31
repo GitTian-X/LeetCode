@@ -1,4 +1,5 @@
-﻿using LeetCode.Q1_Q100;
+﻿using LeetCode.Q1_Q9;
+using LeetCode.Q10_Q19;
 using System;
 using System.Collections.Generic;
 
@@ -8,8 +9,8 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            Q8 q = new Q8();
-            Console.WriteLine(q.MyAtoi("42"));
+            Q10 q = new Q10();
+            Console.WriteLine(q.IsMatch("aa", "*"));
         }
     }
 }
