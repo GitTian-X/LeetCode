@@ -27,34 +27,6 @@ namespace LeetCode
 
     public class Solution
     {
-        public string IntToRoman(int num)
-        {
-            int[] nums = new int[] { 1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000 };
-            string[] romans = new string[] { "I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M" };
-            StringBuilder sb = new StringBuilder();
-            for (int i = nums.Length - 1; i >= 0; i--)
-            {
-                while (num >= nums[i])
-                {
-                    num -= nums[i];
-                    sb.Append(romans[i]);
-                }
-            }
-            return sb.ToString();
-        }
-        public int RomanToInt(string s)
-        {
-            Dictionary<string, int> keyValuePairs = new Dictionary<string, int>() { { "I", 1 },{ "IV", 3}, { "V", 5}, { "IX", 8 }, { "X", 10 }, { "XL", 30 },
-                {"L", 50 }, {"XC", 80 }, { "C", 100}, { "CD", 300}, { "D", 500}, { "CM", 800}, { "M", 1000} };
-            int res = keyValuePairs[s.Substring(0, 1)];
-            for (int i = 1; i < s.Length; i++)
-            {
-                string two = s.Substring(i - 1, 2);
-                string one = s.Substring(i, 1);
-                res += keyValuePairs.ContainsKey(two) ? keyValuePairs[two] : keyValuePairs[one];
-            }
-            return res;
-        }
         public string LongestCommonPrefix(string[] strs)
         {
             if (strs.Length == 0)
