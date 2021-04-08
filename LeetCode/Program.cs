@@ -1,7 +1,5 @@
-﻿using LeetCode.Q1_Q9;
-using LeetCode.Q10_Q19;
+﻿using LeetCode.Q10_Q19;
 using System;
-using System.Collections.Generic;
 
 namespace LeetCode
 {

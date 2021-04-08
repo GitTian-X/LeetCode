@@ -25,33 +25,7 @@ namespace LeetCode
 
     public class Solution
     {
-        public ListNode SwapPairs(ListNode head)
-        {
-            if (head == null || head.next == null)
-            {
-                return head;
-            }
-            ListNode newHead = head.next;
-            head.next = SwapPairs(newHead.next);
-            newHead.next = head;
-            return newHead;
-        }
-        public ListNode SwapPairs1(ListNode head)
-        {
-            ListNode dummyHead = new ListNode(0);
-            dummyHead.next = head;
-            ListNode tmp = dummyHead;
-            while (tmp.next != null && tmp.next.next != null)
-            {
-                ListNode l1 = tmp.next;
-                ListNode l2 = tmp.next.next;
-                tmp.next = l2;
-                l1.next = l2.next;
-                l2.next = l1;
-                tmp = l1;
-            }
-            return dummyHead.next;
-        }
+        
         public ListNode ReverseKGroup(ListNode head, int k)
         {
             ListNode hair = new ListNode(0);
