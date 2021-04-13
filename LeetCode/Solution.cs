@@ -25,59 +25,6 @@ namespace LeetCode
 
     public class Solution
     {
-        public int Divide(int dividend, int divisor)
-        {
-            if (dividend == 0)
-            {
-                return 0;
-            }
-            if (divisor == 1)
-            {
-                return dividend;
-            }
-            else if (divisor == -1)
-            {
-                if (dividend > int.MinValue)
-                {
-                    return -dividend;
-                }
-                else
-                {
-                    return int.MaxValue;
-                }
-            }
-            long a = dividend;
-            long b = divisor;
-            int sig = 1;
-            if ((a < 0 && b > 0) || (a > 0 && b < 0))
-            {
-                sig = -1;
-            }
-            a = a > 0 ? a : -a;
-            b = b > 0 ? b : -b;
-            long res = Div(a, b);
-            if (sig > 0)
-            {
-                return res > int.MaxValue ? int.MaxValue : (int)res;
-            }
-            return -(int)res;
-        }
-
-        private long Div(long a, long b)
-        {
-            if (a < b)
-            {
-                return 0;
-            }
-            long count = 1;
-            long tb = b;
-            while ((tb + tb) <= a)
-            {
-                count = count + count;
-                tb = tb + tb;
-            }
-            return count + Div(a - tb, b);
-        }
         public IList<int> FindSubstring(string s, string[] words)
         {
             List<int> res = new List<int>();
