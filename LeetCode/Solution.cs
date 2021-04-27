@@ -25,44 +25,6 @@ namespace LeetCode
 
     public class Solution
     {
-        public int Search(int[] nums, int target)
-        {
-            int len = nums.Length;
-            if (target < nums[0])
-            {
-                for (int i = len - 1; i > 0; i--)
-                {
-                    if (target == nums[i])
-                    {
-                        return i;
-                    }
-                    if (nums[i] < nums[i - 1])
-                    {
-                        return -1;
-                    }
-                }
-                return -1;
-            }
-            else if (target > nums[0])
-            {
-                for (int i = 0; i < len - 1; i++)
-                {
-                    if (target == nums[i])
-                    {
-                        return i;
-                    }
-                    if (nums[i] > nums[i + 1])
-                    {
-                        return -1;
-                    }
-                }
-                return nums[len - 1] == target ? len - 1 : -1;
-            }
-            else
-            {
-                return 0;
-            }
-        }
         public int[] SearchRange(int[] nums, int target)
         {
             int left = BinarySeatch(nums, target, true);
